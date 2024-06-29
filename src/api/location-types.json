@@ -1,0 +1,10 @@
+{
+    "types": [
+        "coffee",
+        "italian_restaurant",
+        "chinese_restaurant",
+        "bar",
+        "hamburger_restaurant",
+        "general_food"
+    ]
+}

@@ -1,0 +1,58 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map Route</title>
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ"></script>
+  <script>
+    async function initMap() {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: { lat: 37.7749, lng: -122.4194 }, // Center the map to a default location
+      });
+
+      const response = await fetch('/api/route', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          origin: 'San Francisco, CA',
+          destination: 'Los Angeles, CA',
+        }),
+      });
+
+      const route = await response.json();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
+      const directionsService = new google.maps.DirectionsService();
+      directionsService.route({
+        origin: route.legs[0].start_location,
+        destination: route.legs[0].end_location,
+        travelMode: google.maps.TravelMode.DRIVING,
+        waypoints: route.legs[0].via_waypoints || [],
+      }, (result, status) => {
+        if (status === 'OK') {
+          directionsRenderer.setDirections(result);
+        } else {
+          console.error('Directions request failed due to ' + status);
+        }
+      });
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
+</html>

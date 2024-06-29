@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Snackin'</title>
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="location-entry" style="padding: 1%;">
+        <!-- <form onsubmit="return false;">
+            <label for="textInput">Start location:</label>
+            <input type="text" id="startloc" name="textInput" required>
+        </form>
+        <form onsubmit="return false;">
+            <label for="textInput">End location:</label>
+            <input type="text" id="endloc" name="textInput" required>
+        </form>
+        <button type="button" onclick="initMap()">Plan Route</button> -->
+        <form onsubmit="return false;">
+            <label for="textInput" style="font-size: 20px; font-family: sans-serif;">Natural Input</label>
+            <input type="text" id="naturalInput" name="textInput" style="width: 70%; font-size: 20px; margin-left: 1%;" required>
+        </form>
+        <button type="button" onclick="processNaturalInput()" style="margin-top:1%">Plan Route Naturally</button>
+        <p id="lookingFor" style="font-size: 20px; font-family: sans-serif;">Looking for: </p>
+    </div>
+    <div id="map"></div>
+    <script>
+
+        function initMap() {
+
+            var start = document.getElementById('startloc').value;
+            var end = document.getElementById('endloc').value;
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: { lat: 0, lng: 0 }
+            });
+
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+
+            directionsRenderer.setMap(map);
+
+
+            var request = {
+                origin: start,
+                destination: end,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+                    directionsRenderer.setDirections(result);
+                }
+            });
+        }
+
+        function genRouteBetween(o, d) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: { lat: 0, lng: 0 }
+            });
+
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+
+            directionsRenderer.setMap(map);
+
+            var request = {
+                origin: o,
+                destination: d,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+                    directionsRenderer.setDirections(result);
+                }
+            });
+
+        }
+
+        function processNaturalInput() {
+            const q = encodeURIComponent(document.getElementById('naturalInput').value);
+            const uri = 'https://api.wit.ai/message?v=20240304&q=' + q;
+            const CLIENT_TOKEN = "GZURWHWZQZFRX77MGFOQEHXLO5TEIP6V";
+            const auth = 'Bearer ' + CLIENT_TOKEN;
+            var activity = '';
+            var origin = '';
+            var destination = '';
+            var validFoodsAndDrink = ["coffee", "italian_restaurant", "chinese_restaurant", "bar", "hamburger_restaurant",
+                "general_food"
+            ];
+            fetch(uri, {headers: {Authorization: auth}})
+            .then(res => res.json())
+            .then(res => {
+                // 
+                console.log(res.entities)
+                for (const i in validFoodsAndDrink) {
+                    if (res.entities["food_or_drink:" + validFoodsAndDrink[i]] !== undefined) {
+                        activity = res.entities["food_or_drink:" + validFoodsAndDrink[i]][0]["role"]
+                        console.log("Food or drink: " + res.entities["food_or_drink:" + validFoodsAndDrink[i]][0]["role"])
+                        document.getElementById('lookingFor').innerHTML = "Looking for: " + activity;
+                        break;
+                    }
+                }
+                // if (res.entities["food_or_drink:coffee"] !== undefined) {
+                //     activity = res.entities["food_or_drink:coffee"][0]["body"]
+                //     console.log("Food or drink: " + res.entities["food_or_drink:coffee"][0]["role"])
+                //     document.getElementById('lookingFor').innerHTML = "Looking for: " + activity;
+                // }
+                if (res.entities["wit$location:origin"] !== undefined) {
+                    origin = res.entities["wit$location:origin"][0]["body"]
+                    console.log("Origin: " + res.entities["wit$location:origin"][0]["body"])
+                }
+                if (res.entities["wit$location:destination"] !== undefined
+                    && res.entities["wit$location:destination"][0] !== undefined
+                ) {
+                    destination = res.entities["wit$location:destination"][0]["body"]
+                    console.log("Destination: " + res.entities["wit$location:destination"][0]["body"])
+                } else if (res.entities["wit$location:origin"] !== undefined
+                    && res.entities["wit$location:origin"][1] !== undefined
+                ) {
+                    destination = res.entities["wit$location:origin"][1]["body"]
+                    console.log("Destination: " + res.entities["wit$location:origin"][1]["body"])
+                }
+                genRouteBetween(origin, destination);
+            })
+        }
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ">
+    </script>
+</body>
+</html>

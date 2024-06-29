@@ -1,0 +1,91 @@
+{
+    "results": [
+        {
+            "address_components": [
+                {
+                    "long_name": "8",
+                    "short_name": "8",
+                    "types": [
+                        "street_number"
+                    ]
+                },
+                {
+                    "long_name": "Ruan Jian Yuan Lu",
+                    "short_name": "Ruan Jian Yuan Lu",
+                    "types": [
+                        "route"
+                    ]
+                },
+                {
+                    "long_name": "Gan Jing Zi Qu",
+                    "short_name": "Gan Jing Zi Qu",
+                    "types": [
+                        "political",
+                        "sublocality",
+                        "sublocality_level_1"
+                    ]
+                },
+                {
+                    "long_name": "Da Lian Shi",
+                    "short_name": "Da Lian Shi",
+                    "types": [
+                        "locality",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Liao Ning Sheng",
+                    "short_name": "Liao Ning Sheng",
+                    "types": [
+                        "administrative_area_level_1",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "China",
+                    "short_name": "CN",
+                    "types": [
+                        "country",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "116024",
+                    "short_name": "116024",
+                    "types": [
+                        "postal_code"
+                    ]
+                }
+            ],
+            "formatted_address": "8 Ruan Jian Yuan Lu, Gan Jing Zi Qu, Da Lian Shi, Liao Ning Sheng, China, 116024",
+            "geometry": {
+                "location": {
+                    "lat": 38.889698,
+                    "lng": 121.53504
+                },
+                "location_type": "ROOFTOP",
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.8909772302915,
+                        "lng": 121.5364358302915
+                    },
+                    "southwest": {
+                        "lat": 38.8882792697085,
+                        "lng": 121.5337378697085
+                    }
+                }
+            },
+            "place_id": "ChIJKdJhnLRmjzUR6eBKoLyfvhQ",
+            "plus_code": {
+                "compound_code": "VGQP+V2 Lingshui Residential District, Ganjingzi District, Dalian, Liaoning, China",
+                "global_code": "8QC3VGQP+V2"
+            },
+            "types": [
+                "establishment",
+                "point_of_interest",
+                "university"
+            ]
+        }
+    ],
+    "status": "OK"
+}

@@ -1,6 +1,7 @@
-import baseURLs from '../assets/api/baseURLs.json' with { type: "json" };
-import { isEmptyObject } from './js-tools.js';
-
+import dotenv from 'dotenv';
+import { isEmptyObject } from '../tools/js-tools.js';
+import baseURLs from './baseURLs.json' with { type: "json" };
+dotenv.config();
 
 export async function autocompleteLocation(input, countries = ['au']) {
     const headers = {
@@ -25,5 +26,6 @@ export async function autocompleteLocation(input, countries = ['au']) {
         return null;
     }
 
-    return data.suggestions[0].placePrediction.text.text;
+    return data.suggestions[0].placePrediction.text.text; // returns name address
+    // return data.suggestions[0].placePrediction.placeId; // returns placeID
 }

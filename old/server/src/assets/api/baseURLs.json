@@ -1,0 +1,5 @@
+{
+    "MAPS_AUTOCOMPLETE_URL": "https://places.googleapis.com/v1/places:autocomplete",
+    "MAPS_ROUTES_URL": "https://routes.googleapis.com/directions/v2:computeRoutes",
+    "MAPS_GEOCODE_URL": "https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeID}&key=${apiKey}"
+}
