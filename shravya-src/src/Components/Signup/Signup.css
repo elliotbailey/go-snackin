@@ -1,0 +1,70 @@
+
+.signcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    min-width: 80vw;
+}
+
+.signwrapper {
+    width: 420px;
+    background: #37A669;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+    color: #FFF;    
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+
+.signwrapper h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+.signwrapper .signinput-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 20px 0;
+} 
+
+.signinput-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(80px);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #FFF;
+    padding: 20px 45px 20px 20px;
+}
+
+.signinput-box input::placeholder {
+    color: #FFF;
+}
+
+.signinput-box .signicon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px;
+    font-size: 16px;
+}
+
+.signwrapper button {
+    width: 100%;
+    height: 45px;
+    background: #FFF;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 700;
+}

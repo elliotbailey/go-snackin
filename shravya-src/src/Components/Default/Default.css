@@ -1,0 +1,13 @@
+.wrap {
+    text-align: center; 
+    padding: 100px;
+}
+  
+.header {
+    margin-bottom: 20px; 
+}
+  
+.icon {
+    margin-left: 10px; 
+    transform: translateY(15%);    
+}
