@@ -8,5 +8,9 @@
   },
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "react-icons": "^5.2.1",
+    "react-router-dom": "^6.24.0"
+  }
 }

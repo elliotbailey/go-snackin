@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './UserDetails.css';
 
 const UserDetails = () => {
@@ -20,6 +21,8 @@ const UserDetails = () => {
     'Thai', 'Turkish', 'Vegan', 'Vegetarian', 'Vietnamese'
   ];
 
+  
+
   return (
     <div className="food-options-container">
       <h2>Select Food Preferences:</h2>
@@ -39,6 +42,7 @@ const UserDetails = () => {
         ))}
       </div>
       <p>Selected Options: {selectedOptions.join(', ')}</p>
+      <Link to="/home" className="save-link">Save</Link>
     </div>
   );
 };

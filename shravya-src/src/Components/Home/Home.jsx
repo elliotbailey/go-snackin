@@ -33,8 +33,6 @@ function Home() {
   return (
     <div className="home-container">
       <div className="home-content">
-        <h2>Home {data.state}</h2>
-        <button onClick={handleLogout}>Logout</button>
         <div className="input-container">
           <input
             className="curved-input"
@@ -46,7 +44,6 @@ function Home() {
           />
         </div>
         <div>
-          <h3>Output:</h3>
           <ul>
             {output.map((item, index) => (
               <li key={index}>{item}</li>
