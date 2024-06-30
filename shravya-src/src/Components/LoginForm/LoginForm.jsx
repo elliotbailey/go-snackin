@@ -3,11 +3,14 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../AuthContext';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -16,6 +19,9 @@ function LoginForm() {
             if (response.status === 200) {
                 // Handle successful login (e.g., redirect to homepage)
                 navigate('/home');
+                console.log('SUCCESS');
+                login();
+
             }
         } catch (error) {
             // Handle login error

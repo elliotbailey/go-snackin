@@ -4,11 +4,11 @@ import App from './App.jsx';
 import LoginForm from './Components/LoginForm/LoginForm.jsx';
 import HomeGuest from './Components/Home/HomeGuest.jsx'
 import About from './Components/About/About.jsx';
-import Map from './Components/Map/Map.jsx';
-import Account from './Components/Account/Account.jsx';
 import Default from './Components/Default/Default.jsx';
 import Signup from './Components/Signup/Signup.jsx';
 import Home from './Components/Home/Home.jsx';
+import { AuthProvider } from './Components/AuthContext.jsx';
+import UserDetails from './Components/UserDetails/UserDetails.jsx';
 
 import {
   createBrowserRouter,
@@ -38,27 +38,27 @@ const router = createBrowserRouter([
         element: <HomeGuest />,
       },
       {
-        path: 'map',
-        element: <Map />
-      },
-      {
         path: 'about',
         element: <About />
       },
-      {
-        path: 'account',
-        element: <Account />
-      },
+
       {
         path: 'signup',
         element: <Signup />
       },
+      {
+        path: 'user-details',
+        element: <UserDetails />
+      },
+
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 );

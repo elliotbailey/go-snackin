@@ -4,26 +4,34 @@ import { MdEmail } from "react-icons/md";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../AuthContext';
+
 
 function Signup() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post('http://localhost:8001/signup', { username, email, password });
-            if (response.status === 201) {
-                // Handle successful signup (e.g., redirect to login)
-                navigate('/login');
+            if (response.data.message === 'User created successfully') {
+                // Assuming 'User created successfully' is returned by your server upon successful signup
+                login();
+                navigate('/user-details');
+
+            } else {
+                console.error('Signup failed:', response.data.error);
             }
         } catch (error) {
-            // Handle signup error
             console.error('Signup failed:', error);
         }
     };
+    
 
     return (
         <div className='signcontainer'>

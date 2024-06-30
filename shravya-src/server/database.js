@@ -45,9 +45,8 @@ app.post('/login', (req, res) => {
   }
 });
 
-const PORT = 8001;
-const HOST = '0.0.0.0'; // Listen on all network interfaces
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server is running on http://${HOST}:${PORT}`);
+const PORT = 8001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
