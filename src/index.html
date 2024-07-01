@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Snackin'</title>
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ&loading=async&callback=initMap">
+</script>
+<body>
+    <div id="map"></div>
+    <script>
+
+        function convertCoordinates(array) {
+            return array.map(coord => ({
+                lat: coord[0],
+                lng: coord[1]
+            }));
+        }
+
+        var testline = 'cahlFq|beVW?MK_@w@i@eBk@MmIqCUd@oAtAyDnDyD`Dg@i@a@WKEm@Cg@D[HUL_@ZYh@Mp@Ed@?`ALz@HZLTPPp@Zf@Hb@Bb@E`BpFzA`GbExPcJbDsBz@UFTfC`@tDtAxIrApHz@hDzAvGb@`BbAlGHp@FtAAh@KXSTkFtBMLn@rE^`BT^|BhBGh@pC~Bz@x@HDr@z@tBxFpBtFlBhGdB`HZMd@bBdBlF|C|FgBj@eCr@sEx@eCPm@@mHb@yJPu@rM?zAF`BjAtKz@fHHb@HVXd@jMrHXt@Tt@uDhAsOhEuJhBUCKEWQg@?ODU\\EJC^@VGZGNyG|HoBtB}GvIULFxGRjO_CFMGBn@}AFMFENCt@GL]N]XOXMh@ANF~@BL';
+
+        function initMap() {
+            navigator.geolocation.getCurrentPosition((position) => {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                console.log(latitude, longitude);
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 14,
+                    center: { lat: latitude, lng: longitude }
+                });
+
+                fetch('http://localhost:3000/api/decode', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ input: testline }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        var polyline = new google.maps.Polyline({
+                            path: convertCoordinates(data.output),
+                            geodesic: true,
+                            strokeColor: '#FF0000',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 5
+                        });
+                        polyline.setMap(map);
+                    });
+
+            });
+        }
+
+    </script>
+</body>
+</html>
