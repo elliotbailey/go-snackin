@@ -16,7 +16,7 @@ db.prepare(`
     username TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    preferences TEXT
+    preferences TEXT DEFAULT NULL
   )
 `).run();
 
@@ -59,7 +59,6 @@ app.post('/user-details', (req, res) => {
     res.status(400).json({ error: 'Failed to update preferences' });
   }
 });
-
 
 
 const PORT = 8001;
