@@ -6,12 +6,12 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
-  height: '100vh',
+  height: 'calc(100vh - 60px)', // Adjusted height to fit within viewport minus navbar height
   position: 'absolute',
-  top: 0,
+  top: '60px', // Position below the navbar
   left: 0,
-  zIndex: 1
 };
+
 
 function Home() {
   const data = useLocation();

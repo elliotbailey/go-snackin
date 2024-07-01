@@ -18,7 +18,7 @@
   
   .input-container {
     position: fixed; /* Position fixed to stick at the top */
-    top: 550px; /* Adjust top spacing as needed */
+    top: 590px; /* Adjust top spacing as needed */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%);
     z-index: 1000; /* Ensure it stays on top of other elements */

@@ -13,7 +13,7 @@ function NavBar() {
   };
 
   return (
-    <nav className="nav">
+    <header className="nav"> {/* Changed <nav> to <header> */}
       <Link to={isLoggedIn ? '/home' : '/homeguest'} className="goSnack">Go Snackin'</Link>
 
       <div className="login-status">
@@ -25,7 +25,7 @@ function NavBar() {
           </Link>
         )}
       </div>
-    </nav>
+    </header>
   );
 }
 
