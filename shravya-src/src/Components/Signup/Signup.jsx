@@ -22,6 +22,7 @@ function Signup() {
             if (response.data.message === 'User created successfully') {
                 // Assuming 'User created successfully' is returned by your server upon successful signup
                 login();
+                localStorage.setItem('username', username);
                 navigate('/user-details');
 
             } else {

@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './UserDetails.css';
+import axios from 'axios';
 
 const UserDetails = () => {
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleOptionToggle = (option) => {
     if (selectedOptions.includes(option)) {
@@ -21,7 +30,17 @@ const UserDetails = () => {
     'Thai', 'Turkish', 'Vegan', 'Vegetarian', 'Vietnamese'
   ];
 
-  
+  const savePreferences = async () => {
+    try {
+      const response = await axios.post('http://localhost:8001/user-details', {
+        username,
+        preferences: selectedOptions
+      });
+      console.log(response.data); // Optionally handle the server response
+    } catch (error) {
+      console.error('Error saving preferences:', error);
+    }
+  };
 
   return (
     <div className="food-options-container">
@@ -42,7 +61,7 @@ const UserDetails = () => {
         ))}
       </div>
       <p>Selected Options: {selectedOptions.join(', ')}</p>
-      <Link to="/home" className="save-link">Save</Link>
+      <Link to="/home" className="save-link" onClick={savePreferences}>Save</Link>
     </div>
   );
 };

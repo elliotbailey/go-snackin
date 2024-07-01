@@ -15,9 +15,11 @@ db.prepare(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    preferences TEXT
   )
 `).run();
+
 
 // Signup route
 app.post('/signup', (req, res) => {
@@ -42,6 +44,19 @@ app.post('/login', (req, res) => {
     res.status(200).json({ message: 'Login successful', user });
   } else {
     res.status(400).json({ error: 'Invalid email or password' });
+  }
+});
+
+app.post('/user-details', (req, res) => {
+  const { username, preferences } = req.body;
+  const preferencesString = JSON.stringify(preferences);
+
+  const updateQuery = db.prepare('UPDATE users SET preferences = ? WHERE username = ?');
+  try {
+    updateQuery.run(preferencesString, username);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to update preferences' });
   }
 });
 
