@@ -9,6 +9,14 @@
     background-repeat: no-repeat; */
     overflow: auto; /*  Allow the container to scroll */
   }
+
+  .HomeTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Align items to the top */
+    min-height: 800px;
+    height: 100vh;
+  }
   
   .home-content {
     margin-top: 10vh;

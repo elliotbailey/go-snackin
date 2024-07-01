@@ -16,8 +16,7 @@
     align-items: center;
     padding: 0 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
+}
 
 .goSnack {
     font-size: 2rem;
@@ -42,16 +41,9 @@
     transition: background-color 0.3s ease;
 }
 
-.nav a:hover {
-    background-color: #246D45;
-}
-
-.nav a:active {
-    background-color: #555;
-}
-
 .login-status {
     font-size: 1rem;
+    
 }
 
 .login-status button, .login-status a {
@@ -63,9 +55,11 @@
     border-radius: 10px;
     transition: background-color 0.3s ease;
     font-size: 1.2rem;
+    font-weight: bold;
+
 }
 
-.login-status a:hover {
+.login-status button:hover {
     background-color: #246D45;
 }
 
@@ -75,7 +69,3 @@
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.login-status button:active, 
-.login-status a:active {
-    background-color: #555;
-}

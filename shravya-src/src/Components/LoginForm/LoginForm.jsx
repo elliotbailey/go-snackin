@@ -18,9 +18,11 @@ function LoginForm() {
             const response = await axios.post('http://localhost:8001/login', { email, password });
             if (response.status === 200) {
                 // Handle successful login (e.g., redirect to homepage)
-                navigate('/home');
-                console.log('SUCCESS');
                 login();
+                navigate('/home');
+                
+                console.log('SUCCESS');
+                
 
             }
         } catch (error) {

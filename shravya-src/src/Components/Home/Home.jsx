@@ -15,10 +15,8 @@ const containerStyle = {
 
 function Home() {
   const data = useLocation();
-  const navigate = useNavigate();
   const { logout } = useAuth();
   const [inputText, setInputText] = useState(''); // State to store input text
-  const [output, setOutput] = useState([]); // State to store printed output
 
   const [currentPosition, setCurrentPosition] = useState({ lat: 0, lng: 0 });
 
@@ -29,13 +27,11 @@ function Home() {
     });
   }, []);
 
-  const handleLogout = () => {
-    // Logout logic
-    logout();
-    navigate('/homeguest');
-  };
 
   const handleInput = (event) => {
+    if (!isLoggedIn) {
+      return; // Prevent processing input if not logged in
+    }
     if (event.key === 'Enter') {
       const text = event.target.value.trim();
       console.log(text);
@@ -50,10 +46,7 @@ function Home() {
         .then((data) => {
           console.log(data);
         });
-      // if (text !== '') {
-      //   setOutput([...output, text]); // Add new text to output list
-      //   setInputText(''); // Clear input field after processing
-      // }
+
     }
   };
 
@@ -64,16 +57,15 @@ function Home() {
   return (
     <div className="home-container">
       <div className="home-content">
-      <LoadScript googleMapsApiKey="AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ">
+      {/* <LoadScript googleMapsApiKey="AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={currentPosition}
           zoom={11}
           options={{ gestureHandling: 'greedy' }}
         />
-      </LoadScript>
-        {/* <h2>Home {data.state}</h2>
-        <button onClick={handleLogout}>Logout</button> */}
+      </LoadScript> */}
+
         <div className="input-container">
           <input
             className="curved-input"
@@ -84,13 +76,6 @@ function Home() {
             onKeyDown={handleInput}
           />
         </div>
-        {/* <div>
-          <ul>
-            {output.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div> */}
       </div>
     </div>
   );
@@ -99,4 +84,3 @@ function Home() {
 export default Home;
 
 
-//add map api/map image in the back

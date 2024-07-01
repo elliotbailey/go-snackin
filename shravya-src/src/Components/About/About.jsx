@@ -1,7 +1,7 @@
-
+import './About.css';
 function About() {
     return(
-        <div>ABOUT</div>
+        <div className='cont'>ABOUT</div>
     );
 }
 

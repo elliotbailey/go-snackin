@@ -3,68 +3,73 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
-    min-width: 80vw;
-}
+    min-height: 100vh;
+    background-color: #f0f0f0; /* Updated background color */
 
+}
 .signwrapper {
-    width: 420px;
-    background: #37A669;
-    border: 5px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(50px);
-    color: #FFF;    
-    border-radius: 10px;
-    padding: 30px 40px;
-}
-
-
-.signwrapper h1 {
-    font-size: 36px;
+    width: 350px; /* Adjusted width for better alignment */
+    background: rgba(55, 166, 105, 0.9); /* Adjusted background color */
+    backdrop-filter: blur(10px); /* Adjusted backdrop filter */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added box shadow */
+    padding: 30px;
     text-align: center;
 }
 
-.signwrapper .signinput-box {
+.signwrapper h1 {
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.signinput-box {
     position: relative;
-    width: 100%;
-    height: 50px;
-    margin: 20px 0;
-} 
+    margin-bottom: 20px;
+}
 
 .signinput-box input {
     width: 100%;
-    height: 100%;
-    background: transparent;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.1); /* Adjusted input background */
+    border: none;
     outline: none;
-    border: 2px solid rgba(255, 255, 255, .2);
-    backdrop-filter: blur(80px);
-    border-radius: 40px;
+    color: #fff;
     font-size: 16px;
-    color: #FFF;
-    padding: 20px 45px 20px 20px;
+    border-radius: 25px;
+    transition: background 0.3s ease;
 }
 
 .signinput-box input::placeholder {
-    color: #FFF;
+    color: rgba(255, 255, 255, 0.6); /* Adjusted placeholder color */
+}
+
+.signinput-box input:focus {
+    background: rgba(255, 255, 255, 0.2); /* Adjusted focus state */
 }
 
 .signinput-box .signicon {
     position: absolute;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    right: 20px;
-    font-size: 16px;
+    color: #fff;
 }
 
 .signwrapper button {
     width: 100%;
-    height: 45px;
-    background: #FFF;
+    padding: 12px;
+    background: #fff;
     border: none;
     outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
     color: #333;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.signwrapper button:hover {
+    background: #eee; /* Adjusted hover background */
 }

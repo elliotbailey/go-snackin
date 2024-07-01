@@ -4,7 +4,6 @@ import App from './App.jsx';
 import LoginForm from './Components/LoginForm/LoginForm.jsx';
 import HomeGuest from './Components/Home/HomeGuest.jsx'
 import About from './Components/About/About.jsx';
-import Default from './Components/Default/Default.jsx';
 import Signup from './Components/Signup/Signup.jsx';
 import Home from './Components/Home/Home.jsx';
 import { AuthProvider } from './Components/AuthContext.jsx';
@@ -23,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Default />,
+        element: <HomeGuest />,
       },
       {
         path: 'login',
