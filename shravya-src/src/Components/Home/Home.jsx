@@ -85,7 +85,6 @@ function Home() {
           />
         </div>
         {/* <div>
-          <h3>Output:</h3>
           <ul>
             {output.map((item, index) => (
               <li key={index}>{item}</li>
