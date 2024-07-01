@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Home.css'; // Import CSS file for styling
 import { useAuth } from '../AuthContext';
+import { GoogleMap, LoadScript } from '@react-google-maps/api';
+
+const containerStyle = {
+  width: '100%',
+  height: '100vh',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  zIndex: 1
+};
 
 function Home() {
   const data = useLocation();
@@ -9,6 +19,15 @@ function Home() {
   const { logout } = useAuth();
   const [inputText, setInputText] = useState(''); // State to store input text
   const [output, setOutput] = useState([]); // State to store printed output
+
+  const [currentPosition, setCurrentPosition] = useState({ lat: 0, lng: 0 });
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      setCurrentPosition({ lat: latitude, lng: longitude });
+    });
+  }, []);
 
   const handleLogout = () => {
     // Logout logic
@@ -19,10 +38,22 @@ function Home() {
   const handleInput = (event) => {
     if (event.key === 'Enter') {
       const text = event.target.value.trim();
-      if (text !== '') {
-        setOutput([...output, text]); // Add new text to output list
-        setInputText(''); // Clear input field after processing
-      }
+      console.log(text);
+      fetch('http://localhost:3000/api/nlp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ input: text }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        });
+      // if (text !== '') {
+      //   setOutput([...output, text]); // Add new text to output list
+      //   setInputText(''); // Clear input field after processing
+      // }
     }
   };
 
@@ -33,8 +64,16 @@ function Home() {
   return (
     <div className="home-container">
       <div className="home-content">
-        <h2>Home {data.state}</h2>
-        <button onClick={handleLogout}>Logout</button>
+      <LoadScript googleMapsApiKey="AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ">
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={currentPosition}
+          zoom={11}
+          options={{ gestureHandling: 'greedy' }}
+        />
+      </LoadScript>
+        {/* <h2>Home {data.state}</h2>
+        <button onClick={handleLogout}>Logout</button> */}
         <div className="input-container">
           <input
             className="curved-input"
@@ -45,14 +84,14 @@ function Home() {
             onKeyDown={handleInput}
           />
         </div>
-        <div>
+        {/* <div>
           <h3>Output:</h3>
           <ul>
             {output.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );
