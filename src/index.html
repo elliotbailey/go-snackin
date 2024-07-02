@@ -17,7 +17,7 @@
     </style>
 </head>
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ&loading=async&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbfGPLQOkiCN5upNBRnUnmxmyLpTqLYFQ&loading=async&callback=initMap&libraries=marker">
 </script>
 <body>
     <div id="map"></div>
@@ -31,38 +31,84 @@
         }
 
         var testline = 'cahlFq|beVW?MK_@w@i@eBk@MmIqCUd@oAtAyDnDyD`Dg@i@a@WKEm@Cg@D[HUL_@ZYh@Mp@Ed@?`ALz@HZLTPPp@Zf@Hb@Bb@E`BpFzA`GbExPcJbDsBz@UFTfC`@tDtAxIrApHz@hDzAvGb@`BbAlGHp@FtAAh@KXSTkFtBMLn@rE^`BT^|BhBGh@pC~Bz@x@HDr@z@tBxFpBtFlBhGdB`HZMd@bBdBlF|C|FgBj@eCr@sEx@eCPm@@mHb@yJPu@rM?zAF`BjAtKz@fHHb@HVXd@jMrHXt@Tt@uDhAsOhEuJhBUCKEWQg@?ODU\\EJC^@VGZGNyG|HoBtB}GvIULFxGRjO_CFMGBn@}AFMFENCt@GL]N]XOXMh@ANF~@BL';
+        var testline2 = 'vetfDix~d\\hBcBiDuEyA}BpQeQL?JHVZhNxRrApB@LTb@lAhBH`@?b@KZY\\uGvEcA~@GNiGrEiDxCwAvAuBbCkCpDyB~C_@b@iCfCiB|BUb@_@lA_@nBIdBBhBz@jJHh@t@pCRb@xAtEnAxCf@fAzA~B|DpFJ^pFdHpEhGr@dAnBbCpCrCzDjDtEhF`E|ErE|ExCtC|ApAIv@GNMtA@t@Hh@Tn@V`@ZZfDtBlDzAt@XsCvMg@MMDGHAj@CHKD{BAzB@JEBI@k@FILEf@LdDmO\\sA^uBVHhAh@nA|@\\d@Vj@XzADPXRrEbGXX\\NbDn@~AT`ATn@HrAJf@Iv@k@dCuBd@U\\El@@xAPV?t@Kf@YjAu@LGbB]T?n@Lb@Pn@Ef@K~DaJhE_KR{Al@cHf@cFFkAA]uAoGIo@O_Cy@sK?eCFs@h@mGx@qKCc@Z}CBq@ESGQDSLITu@PkA\\uA[c@SiAg@kBI{@?a@Hg@~@sCHc@D_AE_@z@OR@xDz@';
+        var testline3 = 'vetfDix~d\\hBcBiDuEsB}Cy@iA{AaCsAgBsAlAgAjAoHdHuBj@[VK\\?v@BlBCJTtCNh@z@lBd@r@l@~ABh@GjAIXgDnHK^MVk@v@GLkCKWGgA_@y@Us@WODg@AUDYLS\\YXgBxGq@pBcAbCWz@Kv@?pDIn@aAnDKTBXOh@o@|AS^c@f@UJu@bBy@dBqAzBmBlCaAlAaBbBm@lAUv@M~@A|@AxAIj@}AhFCXS\\q@r@k@b@gA`@kAVQHUNa@FgDvB{@dAw@tAQp@eAvBnFpDhCbBbE~BrCxC]pC{@~JGx@B~@XjDEX[`@e@\\g@HlEf@zLnAa@vH?f@H^RThAbAJV`DpO@NYhBUhA?f@R`ED^Av@BH`@RbCB`BTrDPnCBpAClAS~Ai@z@c@`@Ib@AfAHNCHFTf@Zn@?Dp@^rD`@jAb@hA@NAjAgAJAX@RFLHtE`@x@ATBPFH?VVP^FVDrAHl@JRHHn@VrBV|AVJDzGn@xFp@fO`BTFRGdFh@VCP[\\e@Vs@Hi@Bm@PEdBiAz@m@j@a@lCeDNc@PoDj@ePRcAjAeFdDmO\\sA^uBVHhAh@nA|@\\d@Vj@XzADPXRrEbGXX\\NbDn@~AT`ATn@HrAJf@Iv@k@dCuBd@U\\El@@xAPV?t@Kf@YjAu@LGbB]T?n@Lb@Pn@Ef@K~DaJhE_KR{Al@cHf@cFFkAA]uAoGIo@O_Cy@sK?eCFs@h@mGx@qKCc@Z}CBq@ESGQDSLITu@PkA\\uA[c@SiAg@kBI{@?a@Hg@~@sCHc@D_AE_@z@OR@xDz@'
+        var testline4 = 'fuucD_use\\r@xDf@nBFr@DTETMJW@gAMcB[m@EyAFkG~@q@\\_Ap@]LwFRm@PcAv@u@RgCb@sBPeA\\]Xi@b@wBnAaBfAeBz@i@N{ARmCD}BCaCIs@SqA_@KKQy@UmAe@}@Uo@e@{CWO[?UTuAhCsArCo@hAi@~@wAnAoCxC}D|EsCtCWR_@HcAF{@@Oc@yAgI_BiJEUc@BgP_@sBEUHKVId@o@vGY|D@dANn@Pj@`@rF~@hPVvDDE\\?nARjAV\\PpE`ElCbBtBr@|EjApAPlBXrIpBnCLZLFJJ`Aj@hF@|@FnAp@dJHb@uAj@[NGZ@PRj@TWdAYdB_@jAMr@AvAFfB?`@F`@TFHNJf@~@XVhAb@JHPX^x@\\X`@Hh@Kd@Wv@k@h@Yj@MrIj@jKr@h@FrA@tOhAv@CfBWfDs@\\Of@g@PE`A?p@BbC]nCg@rEo@bFs@tDa@lDa@@KHU@SKc@}AsC_AkBc@kAWgAKeAk@oCqAmHGq@Ne@X]XMdEiA`D_BtBw@`Cs@pCm@nC]`AElB?nBKnCYl@@`BXbB`@pCv@r@FzD@v@H`AT~@F`UJbERb@CXGh@UtGqBzBo@^MrBY~AId@?f@Nz@\\h@JfADt@KpEsAzEkAzBm@rCo@bC[~@EtB@p@Bj@AhGdBdAR`BBbB}@jBiAvA{@~@s@tIoEd@]\\f@pA|B`BlCvA~B^~@JZZRFHdAo@XGRDb@d@P\\x@jCXS^Kj@K\\]j@o@n@e@nCmAj@c@jK{GrAu@rAe@d@Wl@c@x@Uf@[d@_@XOhAa@j@YZKn@g@l@q@rByC`@Yh@[\\YXk@nG_SfAyC^qAJu@AiAMy@SkAA}@Fw@xBkGz@iCToAl@qER{@lAn@|@b@fBn@jDx@hCXbBFbBAzBS~AYz@W~Au@l@[pCuBh@[~Aq@`Bc@g@qD?a@n@{HlBiXpAyOb@yB@a@d@yA`@iBRg@|AgFtBsG~@eDt@uBp@eCVm@p@eA?UJMJAVc@Zy@rEmHbAqAhAeA|@i@f@Wx@[x@Sx@K~AGx@Hx@Rh@CLCl@VxB\\hAZjG~@xB`@T?n@FJINDBD~@HPBhGF`CNdHv@dFp@jA@\\CjBD`@DNETSJM@]JWROZEXDRRJ^?Tx@vC`AfCVh@dApBj@vAdApD|@|DPhALTPHLR@\\b@r@x@l@r@^|@t@rAnAXb@?DpG~HfFdGjDnET\\tHpJjAxAVRf@t@Xf@h@vA\\|APzAFjB?nAQjB]pBs@pB]t@aA|Ay@~@uAhAwR|RgAnAsHxHGTsDrFy@~AgAnCs@xBk@jCYhBWfCgA`O{@dHa@tCUdCENG~BJnKLhFJtALx@fAtEhId[^rANNX`AjA|FPhACZHnBFdBCbCEbAWvBi@dD{FjUg@jBq@`DaJ|^{A|Fc@xBiBhHuBtIuA`HOzAIfBA`JGpGJXLzGCvEHhBAb@I`AHl@Ph@VHr@Y^YLCl@uAkAa@jA`@m@tAGTgA~@A^Q^_@nAKd@MdAAt@Bz@RpCXvBZxAXbAl@|AdBjDdJhPv@`B|@nCTv@l@pDZ|DLbCFnBP|A\\tBVhAlAfDtCxFbBjD^r@z@rApAzAvAxAfIjIvSdTvAfBxApCr@fBf@bBd@`CXzBHvA|@`i@VjKNrK?v@GjBMpASvA]xAm@lBiJvTeA|BuC~Go@lBWlAOfAKjC?dB\\vJh@hH|@bIhAdIl@rGlA~H|BnQ^rBPjBj@~DfApIh@tDzIlp@V~ATfARx@n@fB`@~@x@xAvEdGlLrNtH`JzCxEzBrElA|CFHfAxCdBtHP\\zAvLXlEFlE?`DMlD[~GKjCHpD@f@EzAi@dGCv@c@vHFd@?v@FnADTb@Tb@h@z@rAj@n@r@f@t@ZjAXjAPzAFtBBXFvLUhyAoCdJUfbAiBfbAmBvR]pAAr^{@pk@}@pED`ITr]`BzFLvFA~BEzDOdDWlHy@bGgA`T}Dz^qHzL_CxE_AvMaCdJgBxOuCzYwFrQaDnB_@rMiBrFs@rsAaOpEe@xCc@fI}AbCo@p@WlGgBjEwAtGgCbFaClIqEtMuI`HgEtH{DjFeCjQcHvBw@zj@yTvTmI~EyBhEgCjA{@xCgCtByBzBsCdG_JhSqZfDyDrCeCtCuBfBcAnCqAvB{@`Bg@zD}@nCa@bDYhEQrMTpJb@bsAzDnL\\nFFlCGtAKhBUlCi@fBe@~DqA|JwDbDcAxBe@zBW`Hi@dFSdD@rBFjCLjHn@|Cd@~NpCrn@dM~NtCbIzAdBh@rBz@`B|@tBzAbDpC|ApAxBrAdBx@bCv@~A\\vOfBtD^dCJjBAxBKfCa@pBg@tDiAdD}@fCa@zEk@xDi@pCW|ACnC@nAHhs@tGzCd@`Cb@hDx@nTxEvAPjCPtB?nCUn@Kfk@cMlNaDpH{A~MuCdFaAfBi@jAk@zFiDhC}AzAe@fBYtBGnITb@?bBOlDe@zAK~C@~C@tH?nDCtFBn@CnBY`AUhAa@zAw@tAeAlAoAtA{A|AsBlDcEbIuJbBqC\\m@|@sBrC{FxC}D|DmFtDuCzDoCrAw@tA_@bAU|Dm@vBW|PoAfAUnD_ApCq@pGm@pBEzCCpAKnDc@lAE|A@hK|@dDb@pDTf@?zR{AtIu@lBCrDTtDI|EMtJkA|Fy@tCg@zAKbADlCZfA?hAEfASv@WxAy@hBqAz@c@h@Ol@GlAE|@IbAUb@UZYn@y@dIqIbD{BhAc@hA]zAQ|@AhA@xAR~@Vr@VdAj@xApAxAtAhClBbAl@tDnB~FrBlBb@fGdAjNrAfd@~DpERb@HfA@bOn@dCFfBA`DMxCUd@OdDk@d@Mt@]p@WbAQZCn@@zAVd@JjAAbAId@KpAc@p@a@t@Ub@C~AN`Aj@n@t@bArAdA|@v@\\l@P^B\\L`Dn@xAp@dBbAt@l@n@r@|A|B\\x@l@vBzBdKZfA`@bAx@zAv@`AfA`ArAx@vAh@jFxArAj@bBhAbA~@lAbBr@xAh@|A^jBLVJv@Dz@FtBBfIHfDRrB\\jCXdBHjA?|@WfB?v@D`@Pl@\\n@f@`@p@Tf@Lh@Zp@j@p@r@ZRr@VjBPfBTpARpCXjC\\h@M`@@`ALPHkCdHu@zBMbAS~CwApIqCvKiBvDG`@G`CuAvA}ErEWZK^Cp@@jBGzAQCEEOHK@aKeAGA';
+        async function initMap() {
+            // navigator.geolocation.getCurrentPosition((position) => {
+            //     var latitude = position.coords.latitude;
+            //     var longitude = position.coords.longitude;
+            //     console.log(latitude, longitude);
 
-        function initMap() {
-            navigator.geolocation.getCurrentPosition((position) => {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                console.log(latitude, longitude);
+            const latitude = -27.580933599999998;
+            const longitude = 153.0987538;
+            const stopName = 'Sip On 29';
+            const stopAddress = '29 Brandl St, Eight Mile Plains QLD 4113, Australia'
+            const polyline = 'xnxhDehrf\\KSCYB[JSNMZGb@HLNHTNPj@ZpCv@V@f@AVOZEZFPTFT@\\K\\SR]FYEMIiAFk@ZW\\qB`Eq@jAuApCiAjCu@fB[H{GjQgDlImFbNmG`PyAjDaCzEyDzGqBfDaCfDiD`EsDjEaEzDyFzEoAbAwFzDwFfD}EbCqCpAyHtCcF~A_AXaIjB{AZoPlCcDj@yCn@qDfAyFlBaC|@_CfAsCzAiGrDcBhAgO~IeB|@gGdC_FbBmBh@{GtAiKlAaBJ{Od@eF\\uG|@mMfCcH|ByBx@aBr@cFdCaDjBgCbBiDdCsC~BaCvB_EhEwBnCsEjGsApB}JxLkBfB}EfEkE~CyE~CqCzAkFbCeBr@aDjAsNrEyHzBkHzBqUxHuBz@iEtBwAn@yC`BoIjFwTpOqFjDiQ~LqCxBcAdAwF~EsKbLsBnCyB|CmBnC}GvK}DrF_FtFy@t@{HnGyExC}C|Au_@tQuItEiF~CyAjAcCvByEdF{MbPsF`HkAdAeBjAoC|AgBz@qE`B{G|BmDxAkAd@_AVkDnAsB`AmElBqFpCwO~GiYzL{JtDwJdEySdJaBz@iC~AeD|BuClCiGjGa@f@gGbGi]l]w\\x]eKrIcMxJaGpFeEjEiAtAaMhOoFtGmLbOs@hAgBfDmA`Di@dB{D|QOh@}@rEgA`EqAfDk@lAo@jAsU|^qFpImEtFaLfMwWpYiEnEqAhAiBpAyA|@kCjAoIbCyMzD_JpC_QbGiGtBwCrAo@^yI|DeJpEaAb@gBj@w@RmB\\yEdA}@X}D~AeNvHwKfGuEfCkGxCqDvAaNfGcIlEiN`IsAx@qAp@iAr@qGnDmFdDiHdEmSxKqA~@kFxC_Ab@eGhDqIlEwUfNyDvBoE|BkH`EqClBoC~BaCbC{AbBiAxAwAtBiBhDaApBeD~HeA~BDVgBtEQr@In@EbADn@VbAb@vA`FgBfHyB`C}@pDkAj@UdBkAhMyJlF{DbFeDdC}ABULe@{AuCY{@Mg@g@q@IG^\\Vd@VbAHT`AhBRJZPT@TED@`AcA|AeB~@qANJaBfC_@`@qAjAkDbCiFdD{JnHg@XgMvJgAd@eI`CoFbBeFtBkAVMNgAXkBv@u@f@]^m@bAyB|EoBxDUHcN|VoCxEKLgClEuClF}DhGyArBgElF_CjCkCrCuEdEsPdN_FxDeTbQu]nXiBvAyApA}EvDoClB{CdBwDnBcE~AsEpA{Dt@gJtAij@fH}HbAoDj@kB^uBj@qDlAgC`AkCrAsAv@cDzBgMfJiE~CoBvA}BtByA`BiA|A_A~AuAvCmOt`@gAhCs@pAi@z@eApAkAdAsA`AiB`AcL~EqBn@q@P_BRaAHiBBiCIyRqBoMuAoCUc@Cq@GcA@a@D_@?kDh@k@NYM{Bv@yAr@aPnKiA`AoApAeArAyBpDuA~Bm@t@q@p@cAn@s@ZaATkALaA?kA?iBQOUUAk@MiAk@sBw@{IqEe@Q_Do@{Do@gDWeRs@{JQcORuGAkD@{ABqEMuA@}A?gKr@aI\\uMV_[HsBF}F^}ANgBV_JdB}QnDiGzAuCv@eCf@mBVsCLyABiDMMJ}@DqCOwA@g@Lm@^cCpBYLw@R{@Ge@O_@UW_@Sg@Kk@Aw@Hq@Rk@X_@fB_B^k@Nk@JgABeBFKA]MiAQq@Wg@g@u@s@k@o@]eAa@uAgAs@q@_@g@qAcAyEqCUCgAk@uAk@gBiAEIKA_AeAE]@QV]PKLYDQrHt@jEVNiAJWFIbCaBz@m@VM\\MFIz@OJKJOP?DBZMNKD?f@s@v@}Ap@NjGj@vA?lESpBKb@BRF`@\\j@n@XAf@L\\}B?_@EYUaEf@C'
 
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 14,
-                    center: { lat: latitude, lng: longitude }
+            const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: { lat: latitude, lng: longitude },
+                mapId: "66e3394611b81fa0"
+            });
+
+            const pin = new PinElement({
+                scale: 1.4,
+                background: "#37A669",
+                borderColor: "#226742",
+                glyphColor: "#226742"
+            });
+            // Create a marker and apply the element.
+            const marker = new AdvancedMarkerElement({
+                map,
+                position: { lat: latitude, lng: longitude },
+                content: pin.element,
+            });
+
+            const contentString = 
+                '<div id="content">' +
+                `<h1 id="firstHeading" class="firstHeading">${stopName}</h1>` +
+                '<div id="bodyContent">' +
+                `<p>${stopAddress}</p>` +
+                "<p>Enjoy this stop along your route.</p>" +
+                "</div>" +
+                "</div>";
+            
+            const infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                ariaLabel: `Stop at ${stopName}`,
+                position: { lat: latitude, lng: longitude },
+            });
+
+            marker.addListener("click", () => {
+                infowindow.open({
+                    anchor: marker,
+                    map,
+                });
+            });
+
+            fetch('http://localhost:3000/api/decode', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: polyline }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    var polyline = new google.maps.Polyline({
+                        path: convertCoordinates(data.output),
+                        geodesic: true,
+                        strokeColor: '#1E90FF',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 5
+                    });
+                    polyline.setMap(map);
                 });
 
-                fetch('http://localhost:3000/api/decode', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ input: testline }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        var polyline = new google.maps.Polyline({
-                            path: convertCoordinates(data.output),
-                            geodesic: true,
-                            strokeColor: '#FF0000',
-                            strokeOpacity: 1.0,
-                            strokeWeight: 5
-                        });
-                        polyline.setMap(map);
-                    });
-
-            });
+            // });
         }
 
     </script>
