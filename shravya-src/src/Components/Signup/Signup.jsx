@@ -1,38 +1,56 @@
 import './Signup.css';
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 
-
 function Signup() {
-    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
 
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (!validateEmail(email)) {
+            setError('Invalid email format');
+            return;
+        }
+        if (!validatePassword(password)) {
+            if (password.length < 8){
+                setError('Password must be at least 8 characters long');
+            }
+            else {
+            setError('Password must include at least one uppercase letter, one number, and one special character');
+            }
+            return;
+        }
         try {
-            const response = await axios.post('http://localhost:8001/signup', { username, email, password });
+            const response = await axios.post('http://localhost:8001/signup', { email, password });
             if (response.data.message === 'User created successfully') {
-                // Assuming 'User created successfully' is returned by your server upon successful signup
                 login();
-                localStorage.setItem('username', username);
+                localStorage.setItem('email', email);
                 navigate('/user-details');
-
             } else {
-                console.error('Signup failed:', response.data.error);
+                setError(response.data.error || 'Signup failed');
             }
         } catch (error) {
-            console.error('Signup failed:', error);
+            setError(error.response.data.error || 'Signup failed');
         }
     };
-    
 
     return (
         <div className='signcontainer'>
@@ -40,22 +58,15 @@ function Signup() {
                 <div className='signwrapper'>
                     <form onSubmit={handleSubmit}>
                         <h1>Sign Up</h1>
-
-                        <div className="signinput-box">
-                            <input placeholder='Username' name='username' value={username} onChange={(e) => setUsername(e.target.value)} required />
-                            <FaUser className='signicon' />
-                        </div>
-
+                        {error && <p className="error">{error}</p>}
                         <div className="signinput-box">
                             <input placeholder='Email' name='email' value={email} onChange={(e) => setEmail(e.target.value)} required />
                             <MdEmail className='signicon' />
                         </div>
-
                         <div className="signinput-box">
                             <input type="password" placeholder='Password' name='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
                             <FaLock className='signicon' />
                         </div>
-
                         <button type="submit">Sign Up</button>
                     </form>
                 </div>

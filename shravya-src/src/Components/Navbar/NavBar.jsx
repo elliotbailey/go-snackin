@@ -17,10 +17,10 @@ function NavBar() {
       <Link to={isLoggedIn ? '/home' : '/homeguest'} className="goSnack">Go Snackin'</Link>
       <div className="login-status">
         {isLoggedIn ? (
-          <button onClick={handleLogout}>Log Out</button>
+          <button onClick={handleLogout}>LOGOUT</button>
         ) : (
           <Link to="/login">
-            <button>Login</button>
+            <button>LOGIN</button>
           </Link>
         )}
       </div>

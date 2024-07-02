@@ -1,3 +1,14 @@
+.error {
+    color: #ff4d4f;
+    background-color: #ffe6e6;
+    border: 1px solid #ff4d4f;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: left;
+}
+
 .container {
     display: flex;
     justify-content: center;

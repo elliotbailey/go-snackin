@@ -13,24 +13,45 @@ app.use(cors());
 db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     preferences TEXT DEFAULT NULL
   )
 `).run();
 
+// Validate email format
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+// Validate password length
+const validatePassword = (password) => {
+  return password.length >= 8;
+};
 
 // Signup route
 app.post('/signup', (req, res) => {
-  const { username, email, password } = req.body;
-  const stmt = db.prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
+  const { email, password } = req.body;
+
+  if (!validateEmail(email)) {
+    return res.status(400).json({ error: 'Invalid email format' });
+  }
+  if (!validatePassword(password)) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+  }
+
+  const stmt = db.prepare('INSERT INTO users (email, password) VALUES (?, ?)');
 
   try {
-    stmt.run(username, email, password);
+    stmt.run(email, password);
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
-    res.status(400).json({ error: 'Email already exists' });
+    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      res.status(400).json({ error: 'Email already exists' });
+    } else {
+      res.status(400).json({ error: 'Signup failed' });
+    }
   }
 });
 
@@ -48,15 +69,30 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/user-details', (req, res) => {
-  const { username, preferences } = req.body;
+  const { email, preferences } = req.body;
   const preferencesString = JSON.stringify(preferences);
 
-  const updateQuery = db.prepare('UPDATE users SET preferences = ? WHERE username = ?');
+  const updateQuery = db.prepare('UPDATE users SET preferences = ? WHERE email = ?');
   try {
-    updateQuery.run(preferencesString, username);
+    updateQuery.run(preferencesString, email);
     res.json({ success: true });
   } catch (error) {
     res.status(400).json({ error: 'Failed to update preferences' });
+  }
+});
+
+// Update the forgot-password endpoint
+app.post('/forgot-password', (req, res) => {
+  const { email } = req.body;
+
+  // Check if the email exists in the users table
+  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+
+  if (user) {
+    // Simulate sending a password reset email (replace with actual email sending code)
+    res.status(200).json({ message: 'Password reset instructions sent to your email.' });
+  } else {
+    res.status(404).json({ error: 'Email not found in our records' });
   }
 });
 

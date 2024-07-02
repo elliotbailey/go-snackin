@@ -8,12 +8,14 @@ import Signup from './Components/Signup/Signup.jsx';
 import Home from './Components/Home/Home.jsx';
 import { AuthProvider } from './Components/AuthContext.jsx';
 import UserDetails from './Components/UserDetails/UserDetails.jsx';
+import './index.css';
+import ForgotPassword from './Components/ForgotPassword/ForgotPassword.jsx';
 
 import {
   createBrowserRouter,
   RouterProvider,
 } from 'react-router-dom';
-import './index.css';
+
 
 const router = createBrowserRouter([
   {
@@ -49,7 +51,10 @@ const router = createBrowserRouter([
         path: 'user-details',
         element: <UserDetails />
       },
-
+      {
+        path: 'forgot-password',
+        element: <ForgotPassword />,
+      },
     ],
   },
 ]);
