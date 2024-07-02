@@ -69,6 +69,7 @@
 .remember-forgot {
     display: flex;
     justify-content: space-between;
+    align-items: center; /* Added to vertically align items */
     font-size: 14px;
     margin-bottom: 20px;
     color: rgba(255, 255, 255, 0.8); /* Adjusted text color */
@@ -84,6 +85,7 @@
     text-decoration: underline;
     color: #f0f0f0; /* Adjusted hover color */
 }
+
 
 .wrapper button {
     width: 100%;
