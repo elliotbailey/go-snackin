@@ -5,12 +5,12 @@ import axios from 'axios';
 
 const UserDetails = () => {
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    const storedEmail = localStorage.getItem('email');
+    if (storedEmail) {
+      setEmail(storedEmail);
     }
   }, []);
 
@@ -33,7 +33,7 @@ const UserDetails = () => {
   const savePreferences = async () => {
     try {
       const response = await axios.post('http://localhost:8001/user-details', {
-        username,
+        email,
         preferences: selectedOptions
       });
       console.log(response.data); // Optionally handle the server response

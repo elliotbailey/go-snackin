@@ -1,7 +1,7 @@
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react'; // Added useEffect for remembering login
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 
@@ -29,7 +29,7 @@ function LoginForm() {
         try {
             const response = await axios.post('http://localhost:8001/login', { email, password });
             if (response.status === 200) {
-                login();
+                login(email); // Pass logged-in email to the login function
                 navigate('/home');
                 if (rememberMe) {
                     // Save email and password to localStorage if "Remember me" is checked
