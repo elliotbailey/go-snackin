@@ -30,36 +30,22 @@ export async function autocompleteLocation(input, countries = ['au']) {
     // return data.suggestions[0].placePrediction.placeId; // returns placeID
 }
 
-export async function generateRoutePolyline(d, o = null, travelMode = 'DRIVE') {
+export async function generateRoutePolyline(orig, dest, travelMode = 'DRIVE') {
+
     const headers = {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
         'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline'
     };
 
-    // if (origin == null) {
-    //     /// get current location somehow
-    // }
-
     const body = {
         destination: {
-            "address": 
-            // "location": {
-            //     "latLng": {
-            //         "latitude": d.latitude,
-            //         "longitude": d.longitude
-            //     }
-            // }
+            "address": dest
         },
         origin: {
-            "location": {
-                "latLng": {
-                    "latitude": o.latitude,
-                    "longitude": o.longitude
-                }
-            }
+            "address": orig
         },
-        travelMode: travelMode
+        travelMode: travelMode,
     }
 
     const response = await fetch(baseURLs.MAPS_ROUTES_URL, {
@@ -69,8 +55,122 @@ export async function generateRoutePolyline(d, o = null, travelMode = 'DRIVE') {
     });
 
     const data = await response.json();
-    fs.writeFile('./src/reference/polylineExample.json', JSON.stringify(data), 'utf8', () => {});
-
-    return data;
+    //fs.writeFile('./src/reference/polylineExample.json', JSON.stringify(data), 'utf8', () => {});
+    // console.log(data);
+    return data.routes[0].polyline.encodedPolyline;
     
+}
+
+
+export async function generateRoutePolylineWithWaypoints(orig, dest, travelMode = 'DRIVE', intermediates = []) {
+
+    // console.log(`Passed intermediates: ${JSON.stringify(intermediates)}`)
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
+        'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline'
+    };
+
+    const body = {
+        destination: {
+            "address": dest
+        },
+        origin: {
+            "address": orig
+        },
+        travelMode: travelMode,
+        intermediates: convertCoordsListToLocLatLng(intermediates)
+    }
+
+    // console.log(`Call body\n${JSON.stringify(body)}`)
+
+    const response = await fetch(baseURLs.MAPS_ROUTES_URL, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+    });
+
+    const data = await response.json();
+    //fs.writeFile('./src/reference/polylineExample.json', JSON.stringify(data), 'utf8', () => {});
+    // console.log(`Polyline Output: ${JSON.stringify(data)}`);
+    return data.routes[0].polyline.encodedPolyline;
+    
+}
+
+export async function searchNearby(location, activity) {
+
+    // console.log(`Interpreting location: ${location.latitude}, ${location.longitude}`)
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
+        'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.types,places.rating'
+    };
+
+    const body = {
+        maxResultCount: 1,
+        includedTypes: convertActivityToMapsType(activity),
+        locationRestriction: {
+            circle: {
+                center: {
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                },
+                radius: 1000
+            }
+        }
+    }
+
+    const response = await fetch(baseURLs.MAPS_SEARCH_NEARBY, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+    });
+
+    const data = await response.json();
+
+    return data.places[0];
+}
+
+export function convertCoordinatesListToLatLng(array) {
+    return array.map(coord => ({
+        lat: coord[0],
+        lng: coord[1]
+    }));
+}
+
+export function convertCoordinatesToCoords(coords) {
+    return {
+        latitude: coords[0],
+        longitude: coords[1]
+    };
+}
+
+export function convertCoordsListToLocLatLng(array) {
+    return array.map(coord => ({
+        location: {
+            latLng: {
+                latitude: coord.latitude,
+                longitude: coord.longitude
+            }
+        }
+    }));
+}
+
+function convertActivityToMapsType(activity) {
+    switch (activity) {
+        case 'coffee':
+            return ['cafe', 'coffee_shop'];
+        case 'italian_restaurant':
+            return ['italian_restaurant'];
+        case 'hamburger_restaurant':
+            return ['hamburger_restaurant'];
+        case 'general_food':
+            return ['restaurant'];
+        case 'bar':
+            return ['bar'];
+        case 'chinese_restaurant':
+            return ['chinese_restaurant'];
+    }
 }
