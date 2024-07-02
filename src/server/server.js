@@ -60,10 +60,20 @@ export async function startServer() {
         const midway = Math.floor(routeCoords.length / 2);
         const nearby = await searchNearby(convertCoordinatesToCoords(routeCoords[midway]), activity);
         const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [nearby.location]);
-        res.status(200).json({ 
-            stopLocation: nearby.location,
-            stopName: nearby.displayName.text,
-            stopAddress: nearby.formattedAddress,
+        res.status(200).json({
+            stop: {
+                location: nearby.location,
+                name: nearby.displayName.text,
+                address: nearby.formattedAddress
+            },
+            origin: {
+                location: convertCoordinatesToCoords(routeCoords[0]),
+                name: origin
+            },
+            destination: {
+                location: convertCoordinatesToCoords(routeCoords[routeCoords.length - 1]),
+                name: destination
+            },
             "polyline": newPoly 
         });
     });
