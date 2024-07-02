@@ -51,7 +51,11 @@
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 14,
                 center: { lat: latitude, lng: longitude },
-                mapId: "66e3394611b81fa0"
+                mapId: "66e3394611b81fa0",
+                tilt: 30,
+                heading: 0,
+                disableDefaultUI: true,
+                controlled: true
             });
 
             const pin = new PinElement({

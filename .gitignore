@@ -1,3 +1,9 @@
+# Ignore sections
+old
+
+# Databases
+*.db
+
 # OSX
 .DS_Store
 
