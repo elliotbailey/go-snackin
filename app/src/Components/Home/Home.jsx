@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css'; // Import CSS file for styling
 import { useAuth } from '../AuthContext';
@@ -25,13 +25,18 @@ function Home() {
   const [inputText, setInputText] = useState(''); // State to store input text
   const [showRoute, setShowRoute] = useState(false); // State to control the polyline visibility
   const [routeData, setRouteData] = useState(null);
+  const [zoomPoint, setZoomPoint] = useState({lat: -27.4705, lng: 153.0260}); 
+  const mapRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/homeguest");
     }
-  }, [isLoggedIn, navigate]);
+    if (mapRef.current && zoomPoint) {
+      mapRef.current.panTo(zoomPoint);
+    }
+  }, [isLoggedIn, navigate, zoomPoint]);
 
   const handleInput = (event) => {
     if (!isLoggedIn) {
@@ -54,6 +59,7 @@ function Home() {
         .then((data) => {
           console.log(data);
           setRouteData(data);
+          setZoomPoint({lat: data.stop.location.latitude, lng: data.stop.location.longitude});
           setShowRoute(true);
         });
     }
@@ -72,8 +78,8 @@ function Home() {
             suspense
           >
             <GoogleMap
-              zoom={12}
-              center={{ lat: -27.4705, lng: 153.0260 }}
+              zoom={13}
+              center={zoomPoint}
               mapOptions={{
                 mapId: "66e3394611b81fa0",
                 tilt: 30,
@@ -81,6 +87,7 @@ function Home() {
               }}
               style={containerStyle}
               reuseMaps={true}
+              onLoad={map => (mapRef.current = map)}
             >
               {showRoute && (
                 <>
