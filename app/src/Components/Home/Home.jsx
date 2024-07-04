@@ -20,12 +20,52 @@ function convertCoordinates(array) {
   }));
 }
 
+function calculatePolylineBounds(poly) {
+  const bounds = {
+      northwest: {
+          latitude: -Infinity,
+          longitude: -Infinity
+      },
+      southeast: {
+          latitude: Infinity,
+          longitude: Infinity
+      },
+      hypotenuse: 0
+  }
+  const path = polyline.decode(poly);
+  path.forEach(point => {
+      if (point[0] > bounds.northwest.latitude) {
+          bounds.northwest.latitude = point[0];
+      }
+      if (point[0] < bounds.southeast.latitude) {
+          bounds.southeast.latitude = point[0];
+      }
+      if (point[1] > bounds.northwest.longitude) {
+          bounds.northwest.longitude = point[1];
+      }
+      if (point[1] < bounds.southeast.longitude) {
+          bounds.southeast.longitude = point[1];
+      }
+  });
+
+  bounds.hypotenuse = Math.sqrt(
+      Math.pow(bounds.northwest.latitude - bounds.southeast.latitude, 2) +
+      Math.pow(bounds.northwest.longitude - bounds.southeast.longitude, 2)
+  );
+  return bounds;
+}
+
+function estimateZoom(hypotenuse) {
+  return -1.42467 * Math.log(hypotenuse) + 9.89924;
+}
+
 function Home() {
   const { isLoggedIn } = useAuth();
   const [inputText, setInputText] = useState(''); // State to store input text
   const [showRoute, setShowRoute] = useState(false); // State to control the polyline visibility
   const [routeData, setRouteData] = useState(null);
-  const [zoomPoint, setZoomPoint] = useState({lat: -27.4705, lng: 153.0260}); 
+  const [zoomPoint, setZoomPoint] = useState({lat: -27.4705, lng: 153.0260});
+  const [zoomLevel, setZoomLevel] = useState(13);
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
@@ -59,6 +99,8 @@ function Home() {
         .then((data) => {
           console.log(data);
           setRouteData(data);
+          console.log(calculatePolylineBounds(data.polyline));
+          setZoomLevel(estimateZoom(calculatePolylineBounds(data.polyline).hypotenuse));
           setZoomPoint({lat: data.stop.location.latitude, lng: data.stop.location.longitude});
           setShowRoute(true);
         });
@@ -78,7 +120,7 @@ function Home() {
             suspense
           >
             <GoogleMap
-              zoom={13}
+              zoom={zoomLevel}
               center={zoomPoint}
               mapOptions={{
                 mapId: "66e3394611b81fa0",

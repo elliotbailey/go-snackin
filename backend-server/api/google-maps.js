@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import polyline from 'google-polyline';
 import { isEmptyObject } from '../tools/js-tools.js';
 import baseURLs from './baseURLs.json' with { type: "json" };
 dotenv.config();
@@ -64,8 +65,6 @@ export async function generateRoutePolyline(orig, dest, travelMode = 'DRIVE') {
 
 export async function generateRoutePolylineWithWaypoints(orig, dest, travelMode = 'DRIVE', intermediates = []) {
 
-    // console.log(`Passed intermediates: ${JSON.stringify(intermediates)}`)
-
     const headers = {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
@@ -83,8 +82,6 @@ export async function generateRoutePolylineWithWaypoints(orig, dest, travelMode 
         intermediates: convertCoordsListToLocLatLng(intermediates)
     }
 
-    // console.log(`Call body\n${JSON.stringify(body)}`)
-
     const response = await fetch(baseURLs.MAPS_ROUTES_URL, {
         method: 'POST',
         headers: headers,
@@ -92,8 +89,6 @@ export async function generateRoutePolylineWithWaypoints(orig, dest, travelMode 
     });
 
     const data = await response.json();
-    //fs.writeFile('./src/reference/polylineExample.json', JSON.stringify(data), 'utf8', () => {});
-    // console.log(`Polyline Output: ${JSON.stringify(data)}`);
     return data.routes[0].polyline.encodedPolyline;
     
 }
@@ -173,4 +168,39 @@ function convertActivityToMapsType(activity) {
         case 'chinese_restaurant':
             return ['chinese_restaurant'];
     }
+}
+
+export function calculatePolylineBounds(poly) {
+    const bounds = {
+        northwest: {
+            latitude: -Infinity,
+            longitude: -Infinity
+        },
+        southeast: {
+            latitude: Infinity,
+            longitude: Infinity
+        },
+        hypotenuse: 0
+    }
+    const path = polyline.decode(poly);
+    path.forEach(point => {
+        if (point[0] > bounds.northwest.latitude) {
+            bounds.northwest.latitude = point[0];
+        }
+        if (point[0] < bounds.southeast.latitude) {
+            bounds.southeast.latitude = point[0];
+        }
+        if (point[1] > bounds.northwest.longitude) {
+            bounds.northwest.longitude = point[1];
+        }
+        if (point[1] < bounds.southeast.longitude) {
+            bounds.southeast.longitude = point[1];
+        }
+    });
+
+    bounds.hypotenuse = Math.sqrt(
+        Math.pow(bounds.northwest.latitude - bounds.southeast.latitude, 2) +
+        Math.pow(bounds.northwest.longitude - bounds.southeast.longitude, 2)
+    );
+    return bounds;
 }
