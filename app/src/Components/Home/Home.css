@@ -83,3 +83,47 @@
   top: 0.7rem;
   transform: translateX(-50%);
 }
+
+.popup {
+  position: fixed;
+  top: 40%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 300px; /* Adjust the width as needed */
+  text-align: center;
+}
+
+.popup-content h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.popup-content p {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.popup-content button {
+  width: 100%;
+  padding: 12px;
+  background: #333;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.popup-content button:hover {
+  background: #444; /* Adjusted hover background */
+}

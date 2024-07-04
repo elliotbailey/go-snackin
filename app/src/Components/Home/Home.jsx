@@ -66,6 +66,7 @@ function Home() {
   const [routeData, setRouteData] = useState(null);
   const [zoomPoint, setZoomPoint] = useState({lat: -27.4705, lng: 153.0260});
   const [zoomLevel, setZoomLevel] = useState(13);
+  const [showPopup, setShowPopup] = useState(false); // State to control the popup visibility
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
@@ -85,6 +86,9 @@ function Home() {
     }
 
     if (event.key === 'Enter') {
+      // Show popup
+      setShowPopup(true);
+
       // Take user input and send to server for processing
       const input = event.target.value.trim();
       console.log(input);
@@ -109,6 +113,10 @@ function Home() {
 
   const handleInputChange = (event) => {
     setInputText(event.target.value); // Update inputText state as user types
+  };
+
+  const closePopup = () => {
+    setShowPopup(false); // Close the popup
   };
 
   return (
@@ -196,6 +204,16 @@ function Home() {
             onKeyDown={handleInput}
           />
         </div>
+
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h2>Recommendation</h2>
+              <p>This is your food recommendation.</p>
+              <button onClick={closePopup}>Close</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
