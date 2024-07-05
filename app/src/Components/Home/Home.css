@@ -3,11 +3,7 @@
   justify-content: center;
   align-items: flex-start; /* Align items to the top */
   height: 100vh;
-  /* background: url('../Assets/bg.png');  Adjust path to your image 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat; */
-  overflow: auto; /*  Allow the container to scroll */
+  overflow: auto; /* Allow the container to scroll */
 }
 
 .HomeTitle {
@@ -86,10 +82,11 @@
 
 .popup {
   position: fixed;
-  top: 40%;
-  left: 10px;
-  transform: translateY(-50%);
-  background-color: #fff;
+  top: 45%;
+  left: 13%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  backdrop-filter: blur(5px);
   border: 1px solid #ccc;
   padding: 20px;
   border-radius: 10px;
@@ -97,6 +94,14 @@
   z-index: 1000;
   width: 300px; /* Adjust the width as needed */
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space out the content and buttons */
+}
+
+.popup-content {
+  flex-grow: 1;
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .popup-content h2 {
@@ -105,17 +110,31 @@
   margin-bottom: 20px;
 }
 
-.popup-content p {
-  font-size: 14px;
+.popup-content .stop-name {
+  font-size: 20px;
   color: #333;
   margin-bottom: 20px;
 }
 
-.popup-content button {
-  width: 100%;
+.popup-content .stop-address .distance {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.popup-content .popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Adjust the spacing between buttons */
+  margin-top: 30px;
+}
+
+.popup-content .accept-button,
+.popup-content .reject-button {
+  flex: 1; /* Take up equal space */
   padding: 12px;
-  background: #333;
   border: none;
+  outline: none;
   color: #fff;
   font-size: 16px;
   font-weight: 600;
@@ -124,6 +143,30 @@
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.popup-content button:hover {
-  background: #444; /* Adjusted hover background */
+.popup-content .popup-image {
+  width: 100px; /* Adjust width as needed */
+  height: 100px; /* Adjust height as needed */
+  object-fit: cover; /* Ensure the image covers the area */
+  border-radius: 5%; /* For a rounded image if needed */
+}
+
+.popup-content .accept-button {
+  background: #4CAF50; /* Green for accept */
+}
+
+.popup-content .accept-button:hover {
+  background: #45a049; /* Darker green on hover */
+}
+
+.popup-content .reject-button {
+  background: #f44336; /* Red for reject */
+}
+
+.popup-content .reject-button:hover {
+  background: #da190b; /* Darker red on hover */
+}
+
+.stop-name {
+  font-weight: bold; /* Add bold font weight */
+  color: #333; /* Adjust text color */
 }

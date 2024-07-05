@@ -4,6 +4,7 @@ import './Home.css'; // Import CSS file for styling
 import { useAuth } from '../AuthContext';
 import polyline from 'google-polyline';
 import { AdvancedMarker, GoogleMap, GoogleMapApiLoader, PinElement, Polyline, CustomMarker } from 'react-google-map-wrapper';
+import coffeeImage from '../Assets/coffeeImage.jpg';
 
 const containerStyle = {
   width: '100%',
@@ -79,6 +80,13 @@ function Home() {
     }
   }, [isLoggedIn, navigate, zoomPoint]);
 
+  useEffect(() => {
+    if (showRoute && routeData) {
+      setShowPopup(true);
+    }
+  }, [showRoute, routeData]);
+  
+
   const handleInput = (event) => {
     if (!isLoggedIn) {
       console.log('User is not logged in, input ignored');
@@ -117,6 +125,18 @@ function Home() {
 
   const closePopup = () => {
     setShowPopup(false); // Close the popup
+  };
+
+  const acceptRecommendation = () => {
+    console.log('Accepted');
+    // Handle acceptance logic here
+    setShowPopup(false);
+  };
+
+  const rejectRecommendation = () => {
+    console.log('Rejected');
+    // Handle rejection logic here
+    setShowPopup(false);
   };
 
   return (
@@ -205,14 +225,20 @@ function Home() {
           />
         </div>
 
-        {showPopup && (
+        {showRoute && showPopup && (
           <div className="popup">
-            <div className="popup-content">
-              <h2>Recommendation</h2>
-              <p>This is your food recommendation.</p>
-              <button onClick={closePopup}>Close</button>
+          <div className="popup-content">
+            <h2>Recommendation</h2>
+            <p className="stop-name">{routeData.stop.name}</p>
+            <p className="stop-address">{routeData.stop.address}</p>
+            <img className = "popup-image" src={coffeeImage} alt="Coffee" style={{ width: '100%', maxWidth: '200px', margin: '10px auto' }} />
+            <p className="distance">10 minutes away from your destination (example)</p>
+            <div className="popup-buttons">
+              <button className="accept-button" onClick={acceptRecommendation}>✔</button>
+              <button className="reject-button" onClick={rejectRecommendation}>✘</button>
             </div>
           </div>
+        </div>        
         )}
       </div>
     </div>
@@ -220,3 +246,5 @@ function Home() {
 }
 
 export default Home;
+
+//route data still shows after running user input second time because it hasn't been cleared?
