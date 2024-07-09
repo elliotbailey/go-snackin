@@ -17,10 +17,21 @@ function NavBar() {
       <Link to={isLoggedIn ? '/home' : '/homeguest'} className="goSnack">Go Snackin'</Link>
       <div className="login-status">
         {isLoggedIn ? (
-          <button onClick={handleLogout}>LOGOUT</button>
+          <div className="dropdown">
+            <button className="account-btn">ACCOUNT</button>
+            <div className="dropdown-content">
+              <Link to="/review">
+                <button className="review-btn">Review</button>
+              </Link>
+              <Link to="/user-details">
+                <button className="preferences-btn">Change Preferences</button>
+              </Link>
+              <button onClick={handleLogout} className="logout-btn">Logout</button>
+            </div>
+          </div>
         ) : (
           <Link to="/login">
-            <button>LOGIN</button>
+            <button className="login-btn">LOGIN</button>
           </Link>
         )}
       </div>
