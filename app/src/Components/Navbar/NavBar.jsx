@@ -23,7 +23,7 @@ function NavBar() {
               <Link to="/review">
                 <button className="review-btn">Review</button>
               </Link>
-              <Link to="/change-preferences">
+              <Link to="/user-details">
                 <button className="preferences-btn">Change Preferences</button>
               </Link>
               <button onClick={handleLogout} className="logout-btn">Logout</button>
