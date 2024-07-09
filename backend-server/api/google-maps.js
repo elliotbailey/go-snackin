@@ -58,8 +58,10 @@ export async function generateRoutePolyline(orig, dest, travelMode = 'DRIVE') {
     const data = await response.json();
     //fs.writeFile('./src/reference/polylineExample.json', JSON.stringify(data), 'utf8', () => {});
     // console.log(data);
-    return data.routes[0].polyline.encodedPolyline;
-    
+    return {
+        duration: data.routes[0].duration,
+        polyline: data.routes[0].polyline.encodedPolyline
+    };
 }
 
 
@@ -89,7 +91,11 @@ export async function generateRoutePolylineWithWaypoints(orig, dest, travelMode 
     });
 
     const data = await response.json();
-    return data.routes[0].polyline.encodedPolyline;
+    console.log(JSON.stringify(data));
+    return {
+        duration: data.routes[0].duration,
+        polyline: data.routes[0].polyline.encodedPolyline
+    };
     
 }
 
@@ -100,7 +106,7 @@ export async function searchNearby(location, activity) {
     const headers = {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
-        'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.types,places.rating'
+        'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.types,places.rating,places.photos'
     };
 
     const body = {
@@ -126,6 +132,23 @@ export async function searchNearby(location, activity) {
     const data = await response.json();
 
     return data.places[0];
+}
+
+export async function getPlacePhoto(photoReference) {
+    const placePhotoURL = `https://places.googleapis.com/v1/${photoReference}/media?maxWidthPx=400&skipHttpRedirect=true&key=${process.env.GOOGLE_MAPS_API_KEY}`;
+    const headers = {
+        'Content-Type': 'application/json',
+    };    
+
+    const response = await fetch(placePhotoURL, {
+        method: 'GET'
+        // headers: headers
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    return data.photoUri;
 }
 
 export function convertCoordinatesListToLatLng(array) {
@@ -203,4 +226,11 @@ export function calculatePolylineBounds(poly) {
         Math.pow(bounds.northwest.longitude - bounds.southeast.longitude, 2)
     );
     return bounds;
+}
+
+export function formatSecondsToMins(input) {
+    // input example '192s'
+    const seconds = parseInt(input.slice(0, -1));
+    const minutes = Math.ceil(seconds / 60);
+    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
 }

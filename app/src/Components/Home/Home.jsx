@@ -4,7 +4,6 @@ import './Home.css'; // Import CSS file for styling
 import { useAuth } from '../AuthContext';
 import polyline from 'google-polyline';
 import { AdvancedMarker, GoogleMap, GoogleMapApiLoader, PinElement, Polyline, CustomMarker } from 'react-google-map-wrapper';
-import coffeeImage from '../Assets/coffeeImage.jpg';
 
 const containerStyle = {
   width: '100%',
@@ -109,9 +108,7 @@ function Home() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setRouteData(data);
-          console.log(calculatePolylineBounds(data.polyline));
           setZoomLevel(estimateZoom(calculatePolylineBounds(data.polyline).hypotenuse));
           setZoomPoint({lat: data.stop.location.latitude, lng: data.stop.location.longitude});
           setShowRoute(true);
@@ -231,8 +228,8 @@ function Home() {
             <h2>Recommendation</h2>
             <p className="stop-name">{routeData.stop.name}</p>
             <p className="stop-address">{routeData.stop.address}</p>
-            <img className = "popup-image" src={coffeeImage} alt="Coffee" style={{ width: '100%', maxWidth: '200px', margin: '10px auto' }} />
-            <p className="distance">10 minutes away from your destination (example)</p>
+            <img className = "popup-image" src={routeData.photo} alt="Venue Photo" style={{ width: '100%', maxWidth: '200px', margin: '10px auto' }} />
+            <p className="distance">Total route duration is {routeData.duration}</p>
             <div className="popup-buttons">
               <button className="accept-button" onClick={acceptRecommendation}>✔</button>
               <button className="reject-button" onClick={rejectRecommendation}>✘</button>

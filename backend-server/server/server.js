@@ -9,7 +9,7 @@ import polyline from 'google-polyline';
 
 import { processInput } from '../api/natural-language.js';
 import { generateRoutePolyline, generateRoutePolylineWithWaypoints, searchNearby,
-    convertCoordinatesToCoords } from '../api/google-maps.js';
+    convertCoordinatesToCoords, getPlacePhoto, formatSecondsToMins } from '../api/google-maps.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,9 +56,11 @@ export async function startServer() {
         const destination = naturalOutput.locations.destination;
         const activity = naturalOutput.activity;
         console.log(`Origin: ${origin}, Destination: ${destination}, Activity: ${activity}`)
-        const routeCoords = polyline.decode(await generateRoutePolyline(origin, destination));
+        const routeGen = await generateRoutePolyline(origin, destination);
+        const routeCoords = polyline.decode(routeGen.polyline);
         const midway = Math.floor(routeCoords.length / 2);
         const nearby = await searchNearby(convertCoordinatesToCoords(routeCoords[midway]), activity);
+        const photoURL = await getPlacePhoto(nearby.photos[0].name);
         const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [nearby.location]);
         res.status(200).json({
             stop: {
@@ -74,7 +76,9 @@ export async function startServer() {
                 location: convertCoordinatesToCoords(routeCoords[routeCoords.length - 1]),
                 name: destination
             },
-            "polyline": newPoly 
+            "polyline": newPoly.polyline,
+            "duration": formatSecondsToMins(newPoly.duration),
+            "photo": photoURL
         });
     });
 
