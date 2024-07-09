@@ -15,9 +15,9 @@ function Review() {
   };
 
   const containers = [
-    { name: 'Restaurant 1', address: 'Address 1', imageUrl: 'src/components/assets/coffeeImage.jpg' },
-    { name: 'Restaurant 2', address: 'Address 2', imageUrl: 'src/components/assets/image2.jpg' },
-    { name: 'Restaurant 3', address: 'Address 3', imageUrl: 'src/components/assets/image3.jpg' }
+    { name: 'If You Say So', address: '88 Gailey Rd, St Lucia QLD 4067, Australia', imageUrl: 'src/components/assets/coffee.png' },
+    { name: 'Paradise One08', address: '1/108 Helensvale Rd, Helensvale QLD 4212, Australia', imageUrl: 'src/components/assets/cafe.png' },
+    { name: 'Comuna Cantina', address: '12 Creek St, Brisbane City QLD 4000, Australia', imageUrl: 'src/components/assets/mexican.png' }
   ];
 
   return (
@@ -36,8 +36,8 @@ function Review() {
             </div>
             <p>{container.address}</p>
             <div className="buttons">
-              <button onClick={() => handleButtonClick(index, 'enjoy')}>Enjoy</button>
-              <button onClick={() => handleButtonClick(index, 'didNotEnjoy')}>Did Not Enjoy</button>
+              <button onClick={() => handleButtonClick(index, 'enjoy')}>✔</button>
+              <button onClick={() => handleButtonClick(index, 'didNotEnjoy')}>✘</button>
             </div>
           </div>
         )

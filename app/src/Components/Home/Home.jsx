@@ -244,4 +244,3 @@ function Home() {
 
 export default Home;
 
-//route data still shows after running user input second time because it hasn't been cleared?
