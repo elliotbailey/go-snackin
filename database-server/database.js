@@ -19,6 +19,16 @@ db.prepare(`
   )
 `).run();
 
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS preferences (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    place TEXT,
+    place_type TEXT,
+    preference BOOLEAN,
+  )
+`).run();
+
 // Validate email format
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -94,6 +104,38 @@ app.post('/forgot-password', (req, res) => {
   } else {
     res.status(404).json({ error: 'Email not found in our records' });
   }
+});
+
+app.post('/submitPreference', (req, res) => {
+  const { user_id, place, place_type, preference } = req.body;
+  const stmt = db.prepare('INSERT INTO preferences (user_id, place, place_type, preference) VALUES (?, ?, ?, ?)');
+  try {
+    stmt.run(user_id, place, place_type, preference);
+    res.status(201).json({ message: 'Preference submitted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to submit preference' });
+  }
+});
+
+app.post('/checkPlaceForUser', (req, res) => {
+  const { user_id, place } = req.body;
+  const stmt = db.prepare('SELECT * FROM preferences WHERE user_id = ? AND place = ?');
+  const userPlace = stmt.get(user_id, place);
+  if (userPlace) {
+    res.status(200).json({ acceptable: userPlace.preference });
+  } else {
+    res.status(404).json({ acceptable: true });
+  }
+});
+
+app.post('/checkMultiplePlaces', (req, res) => {
+  const { user_id, places } = req.body;
+  const stmt = db.prepare('SELECT * FROM preferences WHERE user_id = ? AND place = ?');
+  const results = places.map((place) => {
+    const userPlace = stmt.get(user_id, place);
+    return { place, acceptable: userPlace ? userPlace.preference : true };
+  });
+  res.status(200).json(results);
 });
 
 
