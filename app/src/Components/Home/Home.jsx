@@ -98,13 +98,14 @@ function Home() {
 
       // Take user input and send to server for processing
       const input = event.target.value.trim();
+      const storedEmail = localStorage.getItem('rememberedEmail');
       console.log(input);
       fetch('http://localhost:3000/api/generateRoute', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input: input }),
+        body: JSON.stringify({ input: input, user_id: storedEmail }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -133,7 +134,23 @@ function Home() {
   const rejectRecommendation = () => {
     console.log('Rejected');
     // Handle rejection logic here
-    setShowPopup(false);
+    // Replace route data with new suggestion
+    const storedEmail = localStorage.getItem('rememberedEmail');
+    fetch('http://localhost:3000/api/suggestNewRoute', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id: storedEmail }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRouteData(data);
+        setZoomLevel(estimateZoom(calculatePolylineBounds(data.polyline).hypotenuse));
+        setZoomPoint({lat: data.stop.location.latitude, lng: data.stop.location.longitude});
+        setShowRoute(true);
+    });
+    setShowPopup(true);
   };
 
   return (

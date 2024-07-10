@@ -110,7 +110,7 @@ export async function searchNearby(location, activity) {
     };
 
     const body = {
-        maxResultCount: 1,
+        maxResultCount: 10,
         includedTypes: convertActivityToMapsType(activity),
         locationRestriction: {
             circle: {
@@ -131,18 +131,14 @@ export async function searchNearby(location, activity) {
 
     const data = await response.json();
 
-    return data.places[0];
+    return data.places;
 }
 
 export async function getPlacePhoto(photoReference) {
     const placePhotoURL = `https://places.googleapis.com/v1/${photoReference}/media?maxWidthPx=400&skipHttpRedirect=true&key=${process.env.GOOGLE_MAPS_API_KEY}`;
-    const headers = {
-        'Content-Type': 'application/json',
-    };    
 
     const response = await fetch(placePhotoURL, {
         method: 'GET'
-        // headers: headers
     });
 
     const data = await response.json();

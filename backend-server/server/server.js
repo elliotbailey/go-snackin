@@ -50,23 +50,43 @@ export async function startServer() {
         res.status(200).json({ "output": result });
     });
 
+    // FORMAT
+    // user_id: {
+    //     suggestedPlaces: []
+    //     routeCount: 0
+    //     origin: ""
+    //     destination: ""
+    // }
+    var cachedRouteData = {};
+
     app.post('/api/generateRoute', async (req, res) => {
-        const naturalOutput = await processInput(req.body.input);
-        const origin = naturalOutput.locations.origin;
-        const destination = naturalOutput.locations.destination;
-        const activity = naturalOutput.activity;
+        const { input, user_id } = req.body;
+        console.log(user_id);
+        const naturalOutput = await processInput(input);
+        const { origin, destination } = naturalOutput.locations;
+        const { activity } = naturalOutput;
         console.log(`Origin: ${origin}, Destination: ${destination}, Activity: ${activity}`)
         const routeGen = await generateRoutePolyline(origin, destination);
         const routeCoords = polyline.decode(routeGen.polyline);
         const midway = Math.floor(routeCoords.length / 2);
         const nearby = await searchNearby(convertCoordinatesToCoords(routeCoords[midway]), activity);
-        const photoURL = await getPlacePhoto(nearby.photos[0].name);
-        const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [nearby.location]);
+        // cachedStops[user_id] = {
+        //     suggestedPlaces: nearby,
+        // };
+        cachedRouteData[user_id] = {
+            origin: origin,
+            destination: destination,
+            suggestedPlaces: nearby,
+            routeCount: 0
+        };
+        // console.log(JSON.stringify(cachedStops));
+        const photoURL = await getPlacePhoto(nearby[0].photos[0].name);
+        const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [nearby[0].location]);
         res.status(200).json({
             stop: {
-                location: nearby.location,
-                name: nearby.displayName.text,
-                address: nearby.formattedAddress
+                location: nearby[0].location,
+                name: nearby[0].displayName.text,
+                address: nearby[0].formattedAddress
             },
             origin: {
                 location: convertCoordinatesToCoords(routeCoords[0]),
@@ -80,6 +100,43 @@ export async function startServer() {
             "duration": formatSecondsToMins(newPoly.duration),
             "photo": photoURL
         });
+    });
+
+    app.post('/api/suggestNewRoute', async (req, res) => {
+        const { user_id } = req.body;
+        cachedRouteData[user_id].routeCount++;
+        const { origin, destination, routeCount } = cachedRouteData[user_id];
+        const stopPlace = cachedRouteData[user_id].suggestedPlaces[routeCount];
+        const photoURL = await getPlacePhoto(stopPlace.photos[0].name);
+        const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [stopPlace.location]);
+        const routeCoords = polyline.decode(newPoly.polyline);
+        console.log(`Follow up place: ${JSON.stringify(cachedRouteData[user_id].suggestedPlaces[cachedRouteData[user_id].routeCount].displayName.text)}`);
+        res.status(200).json({
+            stop: {
+                location: stopPlace.location,
+                name: stopPlace.displayName.text,
+                address: stopPlace.formattedAddress
+            },
+            origin: {
+                location: convertCoordinatesToCoords(routeCoords[0]),
+                name: origin
+            },
+            destination: {
+                location: convertCoordinatesToCoords(routeCoords[routeCoords.length - 1]),
+                name: destination
+            },
+            "polyline": newPoly.polyline,
+            "duration": formatSecondsToMins(newPoly.duration),
+            "photo": photoURL
+        });
+    });
+
+    app.post('/rejectRoute', async (req, res) => {
+
+    });
+
+    app.post('/acceptRoute', async (req, res) => {
+
     });
 
     app.get('/test', (req, res) => {
