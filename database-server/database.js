@@ -25,7 +25,7 @@ db.prepare(`
     user_id INTEGER,
     place TEXT,
     place_type TEXT,
-    preference BOOLEAN,
+    preference BOOLEAN
   )
 `).run();
 
