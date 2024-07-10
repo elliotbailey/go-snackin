@@ -10,6 +10,7 @@ import { AuthProvider } from './Components/AuthContext.jsx';
 import UserDetails from './Components/UserDetails/UserDetails.jsx';
 import './index.css';
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword.jsx';
+import Review from './Components/Review/Review.jsx';
 
 import {
   createBrowserRouter,
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: 'forgot-password',
         element: <ForgotPassword />,
+      },
+      {
+        path: 'review',
+        element: <Review />,
       },
     ],
   },
