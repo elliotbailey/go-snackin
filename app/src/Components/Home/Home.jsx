@@ -67,6 +67,7 @@ function Home() {
   const [zoomPoint, setZoomPoint] = useState({lat: -27.4705, lng: 153.0260});
   const [zoomLevel, setZoomLevel] = useState(13);
   const [showPopup, setShowPopup] = useState(false); // State to control the popup visibility
+  const [showPopupButtons, setShowPopupButtons] = useState(true);
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
@@ -93,9 +94,6 @@ function Home() {
     }
 
     if (event.key === 'Enter') {
-      // Show popup
-      setShowPopup(true);
-
       // Take user input and send to server for processing
       const input = event.target.value.trim();
       const storedEmail = localStorage.getItem('rememberedEmail');
@@ -113,6 +111,8 @@ function Home() {
           setZoomLevel(estimateZoom(calculatePolylineBounds(data.polyline).hypotenuse));
           setZoomPoint({lat: data.stop.location.latitude, lng: data.stop.location.longitude});
           setShowRoute(true);
+          setShowPopup(true);
+          setShowPopupButtons(true);
         });
     }
   };
@@ -127,13 +127,24 @@ function Home() {
 
   const acceptRecommendation = () => {
     console.log('Accepted');
-    // Handle acceptance logic here
-    setShowPopup(false);
+    setShowPopupButtons(false);
+    // Indicate that route has been accepted by user
+    const storedEmail = localStorage.getItem('rememberedEmail');
+    fetch('http://localhost:3000/api/acceptRoute', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id: storedEmail }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+    });
   };
 
   const rejectRecommendation = () => {
     console.log('Rejected');
-    // Handle rejection logic here
     // Replace route data with new suggestion
     const storedEmail = localStorage.getItem('rememberedEmail');
     fetch('http://localhost:3000/api/suggestNewRoute', {
@@ -247,10 +258,12 @@ function Home() {
             <p className="stop-address">{routeData.stop.address}</p>
             <img className = "popup-image" src={routeData.photo} alt="Venue Photo" style={{ width: '100%', maxWidth: '200px', margin: '10px auto' }} />
             <p className="distance">Total route duration is {routeData.duration}</p>
+            {showPopupButtons && (
             <div className="popup-buttons">
               <button className="accept-button" onClick={acceptRecommendation}>✔</button>
               <button className="reject-button" onClick={rejectRecommendation}>✘</button>
             </div>
+            )}
           </div>
         </div>        
         )}
