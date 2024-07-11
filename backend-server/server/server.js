@@ -10,6 +10,7 @@ import polyline from 'google-polyline';
 import { processInput } from '../api/natural-language.js';
 import { generateRoutePolyline, generateRoutePolylineWithWaypoints, searchNearby,
     convertCoordinatesToCoords, getPlacePhoto, formatSecondsToMins } from '../api/google-maps.js';
+import { submitPreference } from './preferences.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,27 +62,33 @@ export async function startServer() {
 
     app.post('/api/generateRoute', async (req, res) => {
         const { input, user_id } = req.body;
-        console.log(user_id);
+        // Natural language processing to extract origin, destination and stop activity type
         const naturalOutput = await processInput(input);
         const { origin, destination } = naturalOutput.locations;
         const { activity } = naturalOutput;
         console.log(`Origin: ${origin}, Destination: ${destination}, Activity: ${activity}`)
+        // Generate initial route for reference
         const routeGen = await generateRoutePolyline(origin, destination);
+        // Decode reference into coordinates array
         const routeCoords = polyline.decode(routeGen.polyline);
         const midway = Math.floor(routeCoords.length / 2);
+        // Search around navigational centre of route for target activity
         const nearby = await searchNearby(convertCoordinatesToCoords(routeCoords[midway]), activity);
-        // cachedStops[user_id] = {
-        //     suggestedPlaces: nearby,
-        // };
+        // Cache found places as follow up suggestions
         cachedRouteData[user_id] = {
             origin: origin,
             destination: destination,
             suggestedPlaces: nearby,
             routeCount: 0
         };
-        // console.log(JSON.stringify(cachedStops));
         const photoURL = await getPlacePhoto(nearby[0].photos[0].name);
-        const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [nearby[0].location]);
+        const newPoly = await generateRoutePolylineWithWaypoints(
+            origin,
+            destination,
+            'DRIVE',
+            [nearby[0].location]
+        );
+        // Return initial route with stop suggestion
         res.status(200).json({
             stop: {
                 location: nearby[0].location,
@@ -104,13 +111,31 @@ export async function startServer() {
 
     app.post('/api/suggestNewRoute', async (req, res) => {
         const { user_id } = req.body;
+        // update user preferences to show place was rejected
+        submitPreference(
+            user_id,
+            cachedRouteData[user_id].suggestedPlaces[cachedRouteData[user_id].routeCount],
+            false
+        );
+        // Move to next suggested place and plan route
         cachedRouteData[user_id].routeCount++;
         const { origin, destination, routeCount } = cachedRouteData[user_id];
         const stopPlace = cachedRouteData[user_id].suggestedPlaces[routeCount];
         const photoURL = await getPlacePhoto(stopPlace.photos[0].name);
-        const newPoly = await generateRoutePolylineWithWaypoints(origin, destination, 'DRIVE', [stopPlace.location]);
+        const newPoly = await generateRoutePolylineWithWaypoints(
+            origin,
+            destination,
+            'DRIVE',
+            [stopPlace.location]
+        );
         const routeCoords = polyline.decode(newPoly.polyline);
-        console.log(`Follow up place: ${JSON.stringify(cachedRouteData[user_id].suggestedPlaces[cachedRouteData[user_id].routeCount].displayName.text)}`);
+        console.log(`Follow up place: ${JSON.stringify(
+            cachedRouteData[user_id]
+            .suggestedPlaces[cachedRouteData[user_id].routeCount]
+            .displayName
+            .text
+        )}`);
+        // Return follow up route with stop suggestion
         res.status(200).json({
             stop: {
                 location: stopPlace.location,
@@ -135,8 +160,14 @@ export async function startServer() {
 
     });
 
-    app.post('/acceptRoute', async (req, res) => {
-
+    app.post('/api/acceptRoute', async (req, res) => {
+        const { user_id } = req.body;
+        submitPreference(
+            user_id,
+            cachedRouteData[user_id].suggestedPlaces[cachedRouteData[user_id].routeCount],
+            true
+        );
+        res.status(200).json({ "message": "Route accepted" });
     });
 
     app.get('/test', (req, res) => {

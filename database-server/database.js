@@ -110,9 +110,10 @@ app.post('/submitPreference', (req, res) => {
   const { user_id, place, place_type, preference } = req.body;
   const stmt = db.prepare('INSERT INTO preferences (user_id, place, place_type, preference) VALUES (?, ?, ?, ?)');
   try {
-    stmt.run(user_id, place, place_type, preference);
+    stmt.run(user_id, place, place_type.toString(), preference ? 1 : 0);
     res.status(201).json({ message: 'Preference submitted successfully' });
   } catch (error) {
+    console.log(error.message)
     res.status(400).json({ error: 'Failed to submit preference' });
   }
 });
