@@ -176,16 +176,10 @@ function convertActivityToMapsType(activity) {
     switch (activity) {
         case 'coffee':
             return ['cafe', 'coffee_shop'];
-        case 'italian_restaurant':
-            return ['italian_restaurant'];
-        case 'hamburger_restaurant':
-            return ['hamburger_restaurant'];
         case 'general_food':
             return ['restaurant'];
-        case 'bar':
-            return ['bar'];
-        case 'chinese_restaurant':
-            return ['chinese_restaurant'];
+        default:
+            return activity;
     }
 }
 

@@ -5,6 +5,11 @@
         "chinese_restaurant",
         "bar",
         "hamburger_restaurant",
-        "general_food"
+        "general_food",
+        "ice_cream_shop",
+        "thai_restaurant",
+        "sushi_restaurant",
+        "breakfast_restaurant",
+        "vegan_restaurant"
     ]
 }
