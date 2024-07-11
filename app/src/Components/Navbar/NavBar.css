@@ -25,6 +25,19 @@
     text-decoration: none;
     color: white;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px; /* Adjust size as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Adjust spacing */
 }
 
 .nav ul {
