@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import { useAuth } from '../AuthContext';
+import logo from './../Assets/go-snackin-logo-white-small.png'; // Adjusted path
 
 function NavBar() {
   const { isLoggedIn, logout } = useAuth();
@@ -14,7 +15,10 @@ function NavBar() {
 
   return (
     <header className="nav">
-      <Link to={isLoggedIn ? '/home' : '/homeguest'} className="goSnack">Go Snackin'</Link>
+      <div className="logo-container">
+        <img src={logo} alt="Go Snackin' Icon" className="logo" />
+        <Link to={isLoggedIn ? '/home' : '/homeguest'} className="goSnack">Go Snackin'</Link>
+      </div>
       <div className="login-status">
         {isLoggedIn ? (
           <div className="dropdown">
