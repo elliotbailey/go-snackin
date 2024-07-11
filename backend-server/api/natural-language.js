@@ -21,13 +21,15 @@ export async function processInput(input) {
         locations: await extractAndCompleteLocations(data)
     }
 
+    console.log(JSON.stringify(output));
+
     return output;
 }
 
 function classifyActivity(data) {
-    for (const loc in locationTypes.types) {
-        if (data.entities["food_or_drink:" + locationTypes.types[loc]] !== undefined) {
-            return data.entities["food_or_drink:" + locationTypes.types[loc]][0]["role"];
+    for (const loc in locationTypes.cuisine_types) {
+        if (data.entities["food_or_drink:" + locationTypes.cuisine_types[loc]] !== undefined) {
+            return data.entities["food_or_drink:" + locationTypes.cuisine_types[loc]][0]["role"];
         }
     }
 }

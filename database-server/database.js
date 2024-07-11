@@ -1,10 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const Database = require('better-sqlite3');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import Database from 'better-sqlite3';
 
 const app = express();
 const db = new Database('users.db', { verbose: console.log });
+
+import { convertCuisineToMapsType } from './tools.js';
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -106,22 +108,41 @@ app.post('/forgot-password', (req, res) => {
   }
 });
 
+app.post('/getUserPreferences', (req, res) => {
+  const { user_id } = req.body;
+  const user = db.prepare('SELECT preferences FROM users WHERE email = ?').get(user_id);
+  // convert user preferences to google maps type
+  const prefs = JSON.parse(user.preferences).map((pref) => {
+    return convertCuisineToMapsType(pref);
+  });
+
+  if (user) {
+    res.status(200).json({ preferences: prefs });
+  } else {
+    res.status(404).json({ error: 'User not found' });
+  }
+});
+
 app.post('/submitPreference', (req, res) => {
   const { user_id, place, place_type, preference } = req.body;
+  // filter out place types that are irrelevant
+  const irrelevants = ['establishment', 'point_of_interest', 'food', 'store'];
+  const filtered_place_types = place_type.filter((t) => !irrelevants.includes(t));
   const stmt = db.prepare('INSERT INTO preferences (user_id, place, place_type, preference) VALUES (?, ?, ?, ?)');
   try {
-    stmt.run(user_id, place, place_type.toString(), preference ? 1 : 0);
-    res.status(201).json({ message: 'Preference submitted successfully' });
+    stmt.run(user_id, place, filtered_place_types.join(','), preference ? 1 : 0);
+    res.status(200).json({ message: 'Preference submitted successfully' });
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ error: 'Failed to submit preference' });
   }
 });
 
-app.post('/checkPlaceForUser', (req, res) => {
+app.post('/checkPlace', (req, res) => {
   const { user_id, place } = req.body;
-  const stmt = db.prepare('SELECT * FROM preferences WHERE user_id = ? AND place = ?');
+  const stmt = db.prepare('SELECT preference FROM preferences WHERE user_id = ? AND place = ? ORDER BY id DESC LIMIT 1');
   const userPlace = stmt.get(user_id, place);
+  console.log(userPlace);
   if (userPlace) {
     res.status(200).json({ acceptable: userPlace.preference });
   } else {
@@ -131,12 +152,34 @@ app.post('/checkPlaceForUser', (req, res) => {
 
 app.post('/checkMultiplePlaces', (req, res) => {
   const { user_id, places } = req.body;
-  const stmt = db.prepare('SELECT * FROM preferences WHERE user_id = ? AND place = ?');
-  const results = places.map((place) => {
-    const userPlace = stmt.get(user_id, place);
-    return { place, acceptable: userPlace ? userPlace.preference : true };
-  });
-  res.status(200).json(results);
+  const placeholders = places.map(() => '?').join(', ');
+  const query = `
+    SELECT p.*
+    FROM preferences p
+    JOIN (
+      SELECT place, MAX(id) as max_id
+      FROM preferences
+      WHERE user_id = ?
+        AND place IN (${placeholders})
+      GROUP BY place
+    ) grouped_p
+    ON p.place = grouped_p.place AND p.id = grouped_p.max_id
+  `;
+  const stmt = db.prepare(query);
+  const userPlaces = stmt.all(user_id, ...places);
+  const result = userPlaces.map((place) => ({
+    place: place.place,
+    preference: place.preference == 1,
+    types: place.place_type.split(',')
+  }));
+  res.status(200).json({ result });
+});
+
+app.post('/getAllUserPreferences', (req, res) => {
+  const { user_id } = req.body;
+  const stmt = db.prepare('SELECT place_type, preference FROM preferences WHERE user_id = ?');
+  const userPreferences = stmt.all(user_id);
+  res.status(200).json({ userPreferences });
 });
 
 

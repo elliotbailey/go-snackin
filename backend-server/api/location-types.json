@@ -1,6 +1,6 @@
 {
-    "types": [
-        "coffee",
+    "cuisine_types": [
+        "coffee_shop",
         "italian_restaurant",
         "chinese_restaurant",
         "bar",
@@ -10,6 +10,31 @@
         "thai_restaurant",
         "sushi_restaurant",
         "breakfast_restaurant",
-        "vegan_restaurant"
+        "vegan_restaurant",
+        "bakery",
+        "japanese_restaurant",
+        "ramen_restaurant",
+        "indian_restaurant",
+        "pizza_restaurant",
+        "french_restaurant"
+    ],
+    "venue_types_1": [
+        "cafe",
+        "shopping_mall",
+        "grocery_store",
+        "market",
+        "supermarket",
+        "meal_takeaway"
+    ],
+    "venue_types_2": [
+        "fast_food_restaurant",
+        "hotel",
+        "convenience_store",
+        "performing_arts_theater",
+        "art_gallery",
+        "museum",
+        "wedding_venue",
+        "movie_theater",
+        "gas_station"
     ]
 }

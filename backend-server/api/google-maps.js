@@ -57,11 +57,17 @@ export async function generateRoutePolyline(orig, dest, travelMode = 'DRIVE') {
 
     const data = await response.json();
     //fs.writeFile('./src/reference/polylineExample.json', JSON.stringify(data), 'utf8', () => {});
-    // console.log(data);
-    return {
-        duration: data.routes[0].duration,
-        polyline: data.routes[0].polyline.encodedPolyline
-    };
+    console.log(data);
+    try {
+        return {
+            duration: data.routes[0].duration,
+            polyline: data.routes[0].polyline.encodedPolyline
+        };
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+    
 }
 
 
@@ -110,7 +116,7 @@ export async function searchNearby(location, activity) {
     };
 
     const body = {
-        maxResultCount: 10,
+        maxResultCount: 20,
         includedTypes: convertActivityToMapsType(activity),
         locationRestriction: {
             circle: {
@@ -174,10 +180,10 @@ export function convertCoordsListToLocLatLng(array) {
 
 function convertActivityToMapsType(activity) {
     switch (activity) {
-        case 'coffee':
+        case 'coffee_shop':
             return ['cafe', 'coffee_shop'];
         case 'general_food':
-            return ['restaurant'];
+            return ['restaurant', 'cafe'];
         default:
             return activity;
     }

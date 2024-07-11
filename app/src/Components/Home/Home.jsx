@@ -107,6 +107,10 @@ function Home() {
       })
         .then((response) => response.json())
         .then((data) => {
+          if (data.error) {
+            console.error(data.error);
+            return;
+          }
           setRouteData(data);
           setZoomLevel(estimateZoom(calculatePolylineBounds(data.polyline).hypotenuse));
           setZoomPoint({lat: data.stop.location.latitude, lng: data.stop.location.longitude});
