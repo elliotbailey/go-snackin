@@ -10,7 +10,7 @@ import polyline from 'google-polyline';
 import { processInput } from '../api/natural-language.js';
 import { generateRoutePolyline, generateRoutePolylineWithWaypoints, searchNearby,
     convertCoordinatesToCoords, getPlacePhoto, formatSecondsToMins } from '../api/google-maps.js';
-import { submitPreference, sortPlacesByAppeal, scorePlaceAppeal } from './preferences.js';
+import { submitPreference, sortPlacesByAppeal } from './preferences.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

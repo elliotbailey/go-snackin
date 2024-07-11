@@ -54,6 +54,24 @@ async function getAllUserPreferences(user_id) {
     }
 }
 
+async function checkPlace(user_id, place_name) {
+    try {
+        const response = await fetch('http://localhost:8001/checkPlace', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: user_id, place: place_name })
+        });
+
+        const data = await response.json();
+        return data.acceptable; // Return the fetched data
+    } catch (err) {
+        console.log(err);
+        return []; 
+    }
+}
+
 
 export async function constructPlaceScoreMap(user_id) {
     var placeScoreMap = {};
@@ -77,9 +95,8 @@ export async function constructPlaceScoreMap(user_id) {
     return placeScoreMap;
 }
 
-export async function scorePlaceAppeal(user_id, place_types, user_prefs, score_map) {
+export async function scorePlaceAppeal(user_id, place_name, place_types, user_prefs, score_map) {
     let score = 0;
-    // const preferences = await getUserPreferences(user_id);
     // include weighting for account preferences
     for (const p in user_prefs) {
         if (place_types.includes(user_prefs[p])) {
@@ -90,6 +107,13 @@ export async function scorePlaceAppeal(user_id, place_types, user_prefs, score_m
     for (const type in place_types) {
         score += score_map[place_types[type]] || 0;
     }
+
+    // add weighting for actual venue itself
+    const checkPlaceAcceptability = await checkPlace(user_id, place_name);
+    if (checkPlaceAcceptability !== undefined) {
+        score += checkPlaceAcceptability ? 5 : -5;
+    }
+
     return score;
 }
 
@@ -100,7 +124,7 @@ export async function sortPlacesByAppeal(user_id, places) {
     console.log(placeScoreMap);
     const placesWithScores = await Promise.all(
         places.map(async (place) => {
-            const score = await scorePlaceAppeal(user_id, place.types, preferences, placeScoreMap);
+            const score = await scorePlaceAppeal(user_id, place.displayName.text, place.types, preferences, placeScoreMap);
             return { ...place, score };
         })
     );
